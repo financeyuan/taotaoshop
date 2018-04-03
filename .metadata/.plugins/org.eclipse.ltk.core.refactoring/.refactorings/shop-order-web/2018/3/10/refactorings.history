@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy package &apos;com.yaoyao.order.pojo&apos; to &apos;shop-order-interface/src/main/java/com.yaoyao.order.service&apos;&#x0D;&#x0A;- Original project: &apos;shop-order-web&apos;&#x0D;&#x0A;- Destination element: &apos;shop-order-interface/src/main/java/com.yaoyao.order.service&apos;&#x0D;&#x0A;- Original element: &apos;shop-order-web/src/main/java/com.yaoyao.order.pojo&apos;" description="Copy package" destination="=shop-order-interface/src\/main\/java&lt;com.yaoyao.order.service" element1="/src\/main\/java&lt;com.yaoyao.order.pojo" flags="589830" fragments="1" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyPackages" stamp="1520419027182" version="1.0"/>
+</session>

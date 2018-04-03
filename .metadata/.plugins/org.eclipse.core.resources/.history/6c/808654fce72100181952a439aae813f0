@@ -1,0 +1,52 @@
+package com.yaoyao.sso.service.imp;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import com.alibaba.dubbo.config.annotation.Service;
+import com.yaoyao.common.pojo.ShopResult;
+import com.yaoyao.mapper.TbUserMapper;
+import com.yaoyao.pojo.TbUser;
+import com.yaoyao.pojo.TbUserExample;
+import com.yaoyao.pojo.TbUserExample.Criteria;
+import com.yaoyao.sso.service.UserService;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+	@Resource
+	private TbUserMapper tbUserMapper;
+
+	@Override
+	public ShopResult checkUserData(String data, int type) {
+		// 设置查询条件
+		TbUserExample example = new TbUserExample();
+		Criteria criteria = example.createCriteria();
+		// 1.判断用户名是否可用
+		if (type == 1) {
+			criteria.andUsernameEqualTo(data);
+		} else if (type == 2) {
+			// 2.判断电话是否可用
+			criteria.andPhoneEqualTo(data);
+		} else if (type == 3) {
+			// 3.判断邮箱是否可用
+			criteria.andEmailEqualTo(data);
+		} else {
+			return ShopResult.build(400, "所传参数非法！");
+		}
+		List<TbUser> list = tbUserMapper.selectByExample(example);
+		if (list != null && list.size() > 0) {
+			return ShopResult.ok(false);
+		}
+
+		return ShopResult.ok(true);
+	}
+
+	@Override
+	public ShopResult register(TbUser tbUser) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

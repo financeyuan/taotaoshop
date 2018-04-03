@@ -1,0 +1,18 @@
+package com.shop.search.dao.impl;
+
+import org.apache.solr.client.solrj.SolrQuery;
+import org.springframework.stereotype.Repository;
+
+import com.yaoyao.common.pojo.SearchResult;
+import com.yaoyao.search.service.dao.SearchDao;
+
+@Repository
+public class SearchDaoImpl implements SearchDao{
+
+	@Override
+	public SearchResult search(SolrQuery query) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

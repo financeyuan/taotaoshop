@@ -1,0 +1,6 @@
+com\yaoyao\search\mapper\SearchItemMapper.class
+com\yaoyao\search\dao\impl\SearchDaoImpl.class
+com\yaoyao\search\service\impl\SearchItemServiceImpl.class
+com\yaoyao\search\listener\MyMessageListener.class
+com\yaoyao\search\listener\ItemAddMessageListener.class
+com\yaoyao\search\service\impl\SearchServiceImpl.class

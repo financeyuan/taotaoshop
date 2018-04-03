@@ -1,0 +1,3 @@
+com\yaoyao\search\dao\SearchDao.class
+com\yaoyao\search\service\SearchService.class
+com\yaoyao\search\service\SearchItemService.class

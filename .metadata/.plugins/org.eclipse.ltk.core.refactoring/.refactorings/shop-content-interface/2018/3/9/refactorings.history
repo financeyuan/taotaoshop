@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename package &apos;com.shop.content.service&apos; to &apos;com.yaoyao.content.service&apos;&#x0D;&#x0A;- Original project: &apos;shop-content-interface&apos;&#x0D;&#x0A;- Original element: &apos;shop-content-interface/src/main/java/com.shop.content.service&apos;&#x0D;&#x0A;- Renamed element: &apos;shop-content-interface/src/main/java/com.yaoyao.content.service&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename package &apos;com.shop.content.service&apos;" flags="589830" hierarchical="false" id="org.eclipse.jdt.ui.rename.package" input="/src\/main\/java&lt;com.shop.content.service" name="com.yaoyao.content.service" qualified="false" references="true" stamp="1520085462497" textual="false" version="1.0"/>
+</session>

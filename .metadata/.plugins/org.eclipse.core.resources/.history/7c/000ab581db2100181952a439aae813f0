@@ -1,0 +1,13 @@
+package com.yaoyao.item.controller;
+
+
+import org.springframework.web.bind.annotation.RestController;
+/**
+ * 商品详情展示
+ * @author Administrator
+ *
+ */
+@RestController
+public class ItemController {
+
+}

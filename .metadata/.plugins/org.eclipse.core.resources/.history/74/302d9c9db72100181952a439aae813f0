@@ -1,0 +1,5 @@
+package com.yaoyao.search.service;
+
+public interface SearchService {
+
+}

@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="TestSolrJ.testAddDocument" project="shop-search-service" tests="1" started="1" failures="0" errors="0" ignored="0">
+  <testcase name="testAddDocument" classname="com.yaoyao.solrj.TestSolrJ" time="0.901"/>
+</testrun>

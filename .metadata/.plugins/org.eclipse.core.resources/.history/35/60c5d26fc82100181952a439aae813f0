@@ -1,0 +1,5 @@
+package com.yaoyao.search.exception;
+
+public class GlobalExceptionResolver {
+
+}

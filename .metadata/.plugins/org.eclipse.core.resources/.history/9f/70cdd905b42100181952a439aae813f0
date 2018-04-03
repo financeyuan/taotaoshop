@@ -1,0 +1,9 @@
+package com.yaoyao.common.pojo;
+
+import java.io.Serializable;
+
+public class SearchResult implements Serializable{
+	
+	
+
+}

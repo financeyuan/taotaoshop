@@ -1,0 +1,3 @@
+com\yaoyao\jedis\service\impl\JedisClientPool.class
+com\yaoyao\content\service\ContentServiceImpl.class
+com\yaoyao\content\service\ContentCategoryServiceImpl.class

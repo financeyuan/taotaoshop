@@ -1,0 +1,7 @@
+package com.shop.search.mapper;
+
+public interface SearchItemMapper {
+	
+	List<Sear>
+
+}

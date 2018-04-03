@@ -1,0 +1,5 @@
+package com.yaoyao.search.service.dao;
+
+public interface SearchDao {
+
+}

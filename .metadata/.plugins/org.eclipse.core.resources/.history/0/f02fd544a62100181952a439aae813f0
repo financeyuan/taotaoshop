@@ -1,0 +1,14 @@
+package com.yaoyao.common.pojo;
+
+import java.io.Serializable;
+
+public class SearchItem implements Serializable{
+
+	private String id;  
+	private String title;  
+	private String sell_point;  
+	private long price;  
+	private String image;  
+	private String item_category_name;  
+	private String item_desc; 
+}

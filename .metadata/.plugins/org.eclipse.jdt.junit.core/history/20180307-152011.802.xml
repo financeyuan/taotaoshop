@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="TestSpringActiveMQ.testActiveMQConsumer" project="shop-search-service" tests="1" started="1" failures="0" errors="0" ignored="0">
+  <testcase name="testActiveMQConsumer" classname="com.yaoyao.activeMq.TestSpringActiveMQ" incomplete="true"/>
+</testrun>

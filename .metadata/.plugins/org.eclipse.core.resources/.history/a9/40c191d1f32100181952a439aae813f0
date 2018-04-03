@@ -1,0 +1,15 @@
+package com.yaoyao.order.service.impl;
+
+import com.yaoyao.common.pojo.ShopResult;
+import com.yaoyao.order.pojo.OrderInfo;
+import com.yaoyao.order.service.OrderService;
+
+public class OrderServiceImpl implements OrderService{
+
+	@Override
+	public ShopResult createOrder(OrderInfo orderInfo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

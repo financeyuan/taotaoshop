@@ -1,0 +1,17 @@
+package com.shop.sso.controller;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+
+public class PageController {
+
+	@RequestMapping("/page/register")
+	public String showRegister() {
+		return "register";
+	}
+
+	@RequestMapping("/page/login")
+	public String showLogin() {
+		return "login";
+	}
+
+}

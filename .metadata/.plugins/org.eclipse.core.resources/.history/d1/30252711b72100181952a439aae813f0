@@ -1,0 +1,5 @@
+package com.shop.search.dao.impl;
+
+public class SearchDaoImpl {
+
+}

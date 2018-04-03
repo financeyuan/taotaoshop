@@ -1,0 +1,14 @@
+package com.yaoyao.sso.service.imp;
+
+import com.yaoyao.common.pojo.ShopResult;
+import com.yaoyao.sso.service.UserService;
+
+public class UserServiceImpl implements UserService{
+
+	@Override
+	public ShopResult checkUserData(String data, int type) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

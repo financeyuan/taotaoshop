@@ -1,0 +1,59 @@
+package com.shop.search.dao.impl;
+
+import javax.annotation.Resource;
+
+import org.apache.solr.client.solrj.SolrQuery;
+import org.springframework.stereotype.Repository;
+
+import com.yaoyao.common.pojo.SearchResult;
+import com.yaoyao.search.service.dao.SearchDao;
+
+@Repository
+public class SearchDaoImpl implements SearchDao {
+
+	@Override
+	public SearchResult search(SolrQuery query) throws Exception {
+		 @Resource
+		    private SolrServer solrServer;  
+		  
+		    @Override  
+		    public SearchResult search(SolrQuery query) throws Exception {  
+		        //根据query对象进行查询  
+		        QueryResponse response = solrServer.query(query);  
+		        //取查询结果  
+		        SolrDocumentList solrDocumentList = response.getResults();  
+		        //取查询结果总记录数  
+		        long numFound = solrDocumentList.getNumFound();  
+		        //初始化一个SolrResult对象并把总数属性进行赋值  
+		        SearchResult searchResult = new SearchResult();  
+		        searchResult.setTotalNumber(numFound);  
+		        List<SearchItem> itemList = new ArrayList<>();  
+		        //把查询结果封装到SearchItem当中  
+		        for (SolrDocument solrDocument : solrDocumentList) {  
+		            SearchItem searchItem = new SearchItem();  
+		            searchItem.setId((String)solrDocument.get("id"));  
+		            searchItem.setImage((String)solrDocument.get("item_image"));  
+		            searchItem.setItem_category_name((String)solrDocument.get("item_category_name"));  
+		            searchItem.setItem_desc((String)solrDocument.get("item_desc"));  
+		            searchItem.setPrice((long)solrDocument.get("item_price"));  
+		            searchItem.setSell_point((String)solrDocument.get("item_sell_point"));  
+		            //取高亮显示  
+		            Map<String,Map<String,List<String>>> highlighting = response.getHighlighting();  
+		            List<String> list = highlighting.get(solrDocument.get("id")).get("item_title");  
+		            String title = "";  
+		            if(list != null && list.size() > 0){  
+		                title = list.get(0);  
+		            } else {  
+		                title = (String)solrDocument.get("item_title");  
+		            }  
+		            searchItem.setTitle(title);  
+		            itemList.add(searchItem);  
+		        }  
+		        //把结果添加到SearchResult当中  
+		        searchResult.setItemList(itemList);  
+		        //返回  
+		        return searchResult;  
+		    }  
+	}
+
+}

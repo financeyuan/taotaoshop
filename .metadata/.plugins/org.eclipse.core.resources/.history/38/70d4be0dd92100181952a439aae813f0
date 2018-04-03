@@ -1,0 +1,5 @@
+package com.yaoyao.search.listener;
+
+public class ItemAddMessageListener {
+
+}

@@ -1,0 +1,5 @@
+package com.yaoyao.search.utils;
+
+public class SendMail {
+
+}

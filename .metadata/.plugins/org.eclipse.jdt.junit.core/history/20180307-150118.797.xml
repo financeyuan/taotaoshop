@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="TestActiveMq.testQueueConsumer" project="shop-manager-service" tests="1" started="1" failures="0" errors="1" ignored="0">
+  <testcase name="testQueueConsumer" classname="com.yaoyao.sha.TestActiveMq" time="21.351">
+    <error>javax.jms.JMSException: Could not connect to broker URL: tcp://192.168.156.30:61616. Reason: java.net.ConnectException: Connection timed out: connect&#13;
+	at org.apache.activemq.util.JMSExceptionSupport.create(JMSExceptionSupport.java:36)&#13;
+	at org.apache.activemq.ActiveMQConnectionFactory.createActiveMQConnection(ActiveMQConnectionFactory.java:374)&#13;
+	at org.apache.activemq.ActiveMQConnectionFactory.createActiveMQConnection(ActiveMQConnectionFactory.java:304)&#13;
+	at org.apache.activemq.ActiveMQConnectionFactory.createConnection(ActiveMQConnectionFactory.java:244)&#13;
+	at com.yaoyao.sha.TestActiveMq.testQueueConsumer(TestActiveMq.java:61)&#13;
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)&#13;
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)&#13;
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)&#13;
+	at java.lang.reflect.Method.invoke(Method.java:498)&#13;
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)&#13;
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)&#13;
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)&#13;
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)&#13;
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)&#13;
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)&#13;
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)&#13;
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)&#13;
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)&#13;
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)&#13;
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)&#13;
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)&#13;
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)&#13;
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:86)&#13;
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)&#13;
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:539)&#13;
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:761)&#13;
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:461)&#13;
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:207)&#13;
+Caused by: java.net.ConnectException: Connection timed out: connect&#13;
+	at java.net.DualStackPlainSocketImpl.waitForConnect(Native Method)&#13;
+	at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:85)&#13;
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)&#13;
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)&#13;
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)&#13;
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)&#13;
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)&#13;
+	at java.net.Socket.connect(Socket.java:589)&#13;
+	at org.apache.activemq.transport.tcp.TcpTransport.connect(TcpTransport.java:525)&#13;
+	at org.apache.activemq.transport.tcp.TcpTransport.doStart(TcpTransport.java:488)&#13;
+	at org.apache.activemq.util.ServiceSupport.start(ServiceSupport.java:55)&#13;
+	at org.apache.activemq.transport.AbstractInactivityMonitor.start(AbstractInactivityMonitor.java:169)&#13;
+	at org.apache.activemq.transport.InactivityMonitor.start(InactivityMonitor.java:52)&#13;
+	at org.apache.activemq.transport.TransportFilter.start(TransportFilter.java:64)&#13;
+	at org.apache.activemq.transport.WireFormatNegotiator.start(WireFormatNegotiator.java:72)&#13;
+	at org.apache.activemq.transport.TransportFilter.start(TransportFilter.java:64)&#13;
+	at org.apache.activemq.transport.TransportFilter.start(TransportFilter.java:64)&#13;
+	at org.apache.activemq.ActiveMQConnectionFactory.createActiveMQConnection(ActiveMQConnectionFactory.java:354)&#13;
+	... 26 more&#13;
+&#13;
+</error>
+  </testcase>
+</testrun>

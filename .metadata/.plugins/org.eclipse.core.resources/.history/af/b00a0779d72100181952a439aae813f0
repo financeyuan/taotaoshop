@@ -1,0 +1,21 @@
+package com.yaoyao.search.listener;
+
+/**
+ * 接收ActiveMQ发送的消息
+ * @author admin
+ *
+ */
+public class MyMessageListener implements MessageListener {
+
+	@Override
+	public void onMessage(Message message) {
+		try {
+			TextMessage textMessage = (TextMessage)message;
+			String text = textMessage.getText();
+			System.out.println(text);
+		} catch (JMSException e) {
+			e.printStackTrace();
+		}
+	}
+
+}

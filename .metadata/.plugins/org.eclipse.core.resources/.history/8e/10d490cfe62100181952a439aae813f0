@@ -1,0 +1,7 @@
+package com.yaoyao.sso.service.imp;
+
+import com.yaoyao.sso.service.UserService;
+
+public class UserServiceImpl implements UserService{
+
+}

@@ -1,0 +1,14 @@
+package com.yaoyao.search.service.impl;
+
+import com.yaoyao.common.pojo.ShopResult;
+import com.yaoyao.search.service.SearchItemService;
+
+public class SearchItemServiceImpl implements SearchItemService{
+
+	@Override
+	public ShopResult importItemsToIndex() {
+		
+		return null;
+	}
+
+}

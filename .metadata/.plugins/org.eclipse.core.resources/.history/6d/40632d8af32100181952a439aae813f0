@@ -1,0 +1,5 @@
+package com.yaoyao.order.service;
+
+public interface OrderService {
+
+}

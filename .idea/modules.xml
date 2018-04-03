@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/shop-cart-web/shop-cart-web.iml" filepath="$PROJECT_DIR$/shop-cart-web/shop-cart-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-common/shop-common.iml" filepath="$PROJECT_DIR$/shop-common/shop-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-content/shop-content.iml" filepath="$PROJECT_DIR$/shop-content/shop-content.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-content/shop-content-interface/shop-content-interface.iml" filepath="$PROJECT_DIR$/shop-content/shop-content-interface/shop-content-interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-content/shop-content-service/shop-content-service.iml" filepath="$PROJECT_DIR$/shop-content/shop-content-service/shop-content-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-item-web/shop-item-web.iml" filepath="$PROJECT_DIR$/shop-item-web/shop-item-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-manager/shop-manager.iml" filepath="$PROJECT_DIR$/shop-manager/shop-manager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-manager/shop-manager-dao/shop-manager-dao.iml" filepath="$PROJECT_DIR$/shop-manager/shop-manager-dao/shop-manager-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-manager/shop-manager-interface/shop-manager-interface.iml" filepath="$PROJECT_DIR$/shop-manager/shop-manager-interface/shop-manager-interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-manager/shop-manager-pojo/shop-manager-pojo.iml" filepath="$PROJECT_DIR$/shop-manager/shop-manager-pojo/shop-manager-pojo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-manager/shop-manager-service/shop-manager-service.iml" filepath="$PROJECT_DIR$/shop-manager/shop-manager-service/shop-manager-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-manager-web/shop-manager-web.iml" filepath="$PROJECT_DIR$/shop-manager-web/shop-manager-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-order/shop-order.iml" filepath="$PROJECT_DIR$/shop-order/shop-order.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-order/shop-order-interface/shop-order-interface.iml" filepath="$PROJECT_DIR$/shop-order/shop-order-interface/shop-order-interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-order/shop-order-service/shop-order-service.iml" filepath="$PROJECT_DIR$/shop-order/shop-order-service/shop-order-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-order-web/shop-order-web.iml" filepath="$PROJECT_DIR$/shop-order-web/shop-order-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-parent/shop-parent.iml" filepath="$PROJECT_DIR$/shop-parent/shop-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-portal-web/shop-portal-web.iml" filepath="$PROJECT_DIR$/shop-portal-web/shop-portal-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-search/shop-search.iml" filepath="$PROJECT_DIR$/shop-search/shop-search.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-search/shop-search-interface/shop-search-interface.iml" filepath="$PROJECT_DIR$/shop-search/shop-search-interface/shop-search-interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-search/shop-search-service/shop-search-service.iml" filepath="$PROJECT_DIR$/shop-search/shop-search-service/shop-search-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-search-web/shop-search-web.iml" filepath="$PROJECT_DIR$/shop-search-web/shop-search-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-sso/shop-sso.iml" filepath="$PROJECT_DIR$/shop-sso/shop-sso.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-sso/shop-sso-interface/shop-sso-interface.iml" filepath="$PROJECT_DIR$/shop-sso/shop-sso-interface/shop-sso-interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-sso/shop-sso-service/shop-sso-service.iml" filepath="$PROJECT_DIR$/shop-sso/shop-sso-service/shop-sso-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-sso-web/shop-sso-web.iml" filepath="$PROJECT_DIR$/shop-sso-web/shop-sso-web.iml" />
+    </modules>
+  </component>
+</project>

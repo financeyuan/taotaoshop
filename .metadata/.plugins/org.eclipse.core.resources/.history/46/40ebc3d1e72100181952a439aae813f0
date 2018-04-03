@@ -1,0 +1,10 @@
+package com.yaoyao.sso.service;
+
+import com.yaoyao.common.pojo.ShopResult;
+
+public interface UserService {
+	//用户验证
+	ShopResult checkUserData(String data,int type);
+	//注册  
+	ShopResult register(TbUser tbUser);
+}

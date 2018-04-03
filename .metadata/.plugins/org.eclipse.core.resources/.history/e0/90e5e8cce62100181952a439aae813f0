@@ -1,0 +1,5 @@
+package com.yaoyao.sso.service;
+
+public interface UserService {
+
+}

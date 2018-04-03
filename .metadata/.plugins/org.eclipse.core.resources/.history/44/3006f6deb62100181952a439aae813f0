@@ -1,0 +1,8 @@
+package com.yaoyao.search.service.dao;
+
+import com.yaoyao.common.pojo.SearchResult;
+
+public interface SearchDao {
+	
+	SearchResult search(Solr) throws Exception;
+}

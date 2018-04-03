@@ -1,0 +1,1530 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Spring</title>
+  <link rel="alternate" href="https://spring.io/blog" />
+  <link rel="self" href="https://spring.io/blog.atom" />
+  <id>http://spring.io/blog.atom</id>
+  <icon>https://spring.io/favicon.ico</icon>
+  <updated>2018-03-07T19:14:59Z</updated>
+  <entry>
+    <title>Spring Web Flow 2.5 released</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/03/07/spring-web-flow-2-5-released" />
+    <category term="engineering" label="Engineering" />
+    <author>
+      <name>Rossen Stoyanchev</name>
+    </author>
+    <id>tag:spring.io,2018-03-07:3204</id>
+    <updated>2018-03-07T19:14:59Z</updated>
+    <content type="html">&lt;p&gt;Spring Web Flow 2.5 is now GA and available for use. This release provides an upgrade path for applications using Web Flow to Spring Framework 5 with Java 8, Servlet 3.1, Hibernate 5, Tiles 3, and JSF 2.2 as minimum requirements.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>Testing auto-configurations with Spring Boot 2.0</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/03/07/testing-auto-configurations-with-spring-boot-2-0" />
+    <category term="engineering" label="Engineering" />
+    <author>
+      <name>Madhura Bhave</name>
+    </author>
+    <id>tag:spring.io,2018-01-03:3134</id>
+    <updated>2018-03-07T16:30:00Z</updated>
+    <content type="html">&lt;p&gt;Auto-configuration is one of the most powerful features of Spring Boot. Tests for auto-configuration classes usually follow the same pattern. Most tests start up an &lt;code&gt;ApplicationContext&lt;/code&gt; with the auto-configuration class under test and depending on the test, also load additional configuration to simulate user behavior. The recurrence of this pattern can add a lot of repetition in the code base.&lt;/p&gt;
+&lt;p&gt;Spring Boot 2.0 provides a suite of new test helpers for easily configuring an &lt;code&gt;ApplicationContext&lt;/code&gt; to simulate auto-configuration test scenarios. The following example configures an &lt;code&gt;ApplicationContextRunner&lt;/code&gt; to test the &lt;code&gt;UserServiceAutoConfiguration&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="prettyprint java"&gt;private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()&#xD;
+    .withConfiguration(AutoConfigurations.of(UserServiceAutoConfiguration.class));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Since most tests in a test class share similar configuration, &lt;code&gt;ApplicationContextRunner&lt;/code&gt; is best used as a field of the test class that is set up with some common configuration. &lt;/p&gt;
+&lt;p&gt;Each test can further customize the &lt;code&gt;ApplicationContext&lt;/code&gt; with the desired configuration and properties.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="prettyprint java"&gt;@Test&#xD;
+public void someTest() {&#xD;
+    this.contextRunner&#xD;
+        .withPropertyValues(&amp;quot;user.my.property=test&amp;quot;)&#xD;
+	    .withUserConfiguration(MyConfiguration.class)&#xD;
+	    .run(...);&#xD;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In addition to invoking &lt;code&gt;UserServiceAutoConfiguration&lt;/code&gt;, the example above registers &lt;code&gt;MyConfiguration&lt;/code&gt; and sets the &lt;code&gt;user.my.property&lt;/code&gt; property to &lt;code&gt;test&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ApplicationContextRunner&lt;/code&gt; transparently replicates the configuration initialization order that Spring Boot uses (scanning user configuration first, then auto-configurations according to their defined order).&lt;/p&gt;
+&lt;p&gt;There is support for an &lt;code&gt;AssertableApplicationContext&lt;/code&gt; which provides AssertJ style assertions on an &lt;code&gt;ApplicationContext&lt;/code&gt;. You can also chain multiple assertions as shown in the following example:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="prettyprint java"&gt;@Test&#xD;
+public void someTest() {&#xD;
+    this.contextRunner.run((context) -&amp;gt; {&#xD;
+        assertThat(context).hasSingleBean(MyBean.class);&#xD;
+        assertThat(context).getBeanNames(UserRule.class).hasSize(2);&#xD;
+    });&#xD;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Assertions can also be used on an &lt;code&gt;ApplicationContext&lt;/code&gt; that has failed to start to check the cause of the failure. Regardless, the lifecycle of the context does not need to be managed by the test anymore, i.e the context is automatically closed.&lt;/p&gt;
+&lt;p&gt;For tests that require a &lt;code&gt;WebApplicationContext&lt;/code&gt;, &lt;code&gt;WebApplicationContextRunner&lt;/code&gt; or &lt;code&gt;ReactiveWebApplicationContextRunner&lt;/code&gt; can be used.&lt;/p&gt;
+&lt;p&gt;An auto-configuration can also be affected by the presence of a particular &lt;code&gt;Class&lt;/code&gt; on the classpath using the &lt;code&gt;@ConditionalOnClass&lt;/code&gt; annotation. &lt;code&gt;ApplicationContextRunner&lt;/code&gt; lets you test what happens when a given &lt;code&gt;Class&lt;/code&gt; is not present at runtime. Spring Boot ships with a &lt;code&gt;FilteredClassLoader&lt;/code&gt; that can easily be used by the runner. In the following example, we assert that if &lt;code&gt;UserService&lt;/code&gt; is not present, the auto-configuration is properly disabled:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="prettyprint java"&gt;@Test&#xD;
+public void serviceIsIgnoredIfLibraryIsNotPresent() {&#xD;
+    this.contextRunner&#xD;
+        .withClassLoader(new FilteredClassLoader(UserService.class))&#xD;
+        .run((context) -&amp;gt; assertThat(context)&#xD;
+                .doesNotHaveBean(&amp;quot;userService&amp;quot;));&#xD;
+}
+&lt;/code&gt;&lt;/pre&gt;</content>
+  </entry>
+  <entry>
+    <title>Spring Batch 3.0.9.RELEASE and 4.0.1.RELEASE are now available</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/03/07/spring-batch-3-0-9-release-and-4-0-1-release-are-now-available" />
+    <category term="releases" label="Releases" />
+    <author>
+      <name>Mahmoud Ben Hassine</name>
+    </author>
+    <id>tag:spring.io,2018-03-02:3200</id>
+    <updated>2018-03-07T16:26:00Z</updated>
+    <content type="html">&lt;p&gt;We are pleased to announce the release of Spring Batch 3.0.9.RELEASE and 4.0.1.RELEASE via Maven Central, Github, and the Pivotal download repository.&lt;/p&gt;
+&lt;p&gt;These two maintenance releases address a number of bug fixes, enhancements and documentation updates. For a complete list of changes, please refer to the change logs for &lt;a href="https://jira.spring.io/jira/secure/ReleaseNote.jspa?projectId=10090&amp;version=16254"&gt;3.0.9&lt;/a&gt; and &lt;a href="https://jira.spring.io/jira/secure/ReleaseNote.jspa?projectId=10090&amp;version=16626"&gt;4.0.1&lt;/a&gt;. Many thanks to all of those who submitted &lt;a href="https://github.com/spring-projects/spring-batch/pulls"&gt;pull requests&lt;/a&gt; that went into these releases.&lt;/p&gt;
+&lt;p&gt;Please note that the next patch version, 3.0.10.RELEASE, will be the &lt;strong&gt;last&lt;/strong&gt; maintenance release of the 3.x line. We strongly recommend users to migrate to the latest and greatest Spring Batch 4 (now available via Spring Boot 2).&lt;/p&gt;
+&lt;p&gt;We look forward to your feedback in &lt;a href="https://jira.spring.io/browse/BATCH"&gt;Jira&lt;/a&gt;, &lt;a href="https://stackoverflow.com/questions/tagged/spring-batch"&gt;StackOverflow&lt;/a&gt;, &lt;a href="https://gitter.im/spring-batch/Lobby"&gt;Gitter&lt;/a&gt;, or directly via Twitter at &lt;a href="https://twitter.com/_benas_"&gt;@_benas_&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://projects.spring.io/spring-batch/"&gt;Spring Batch Home&lt;/a&gt; | &lt;a href="https://github.com/spring-projects/spring-batch"&gt;Source on GitHub&lt;/a&gt; | &lt;a href="https://docs.spring.io/spring-batch/4.0.x/reference/html/index.html"&gt;Reference Documentation&lt;/a&gt;&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>Security issue in Spring Data REST (CVE-2017-8046)</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/03/06/security-issue-in-spring-data-rest-cve-2017-8046" />
+    <category term="engineering" label="Engineering" />
+    <author>
+      <name>Oliver Gierke</name>
+    </author>
+    <id>tag:spring.io,2018-03-06:3203</id>
+    <updated>2018-03-06T17:52:00Z</updated>
+    <content type="html">&lt;p&gt;Last fall, a security vulnerability affecting Spring Data REST was discovered. We patched the affected modules and published a &lt;a href="https://pivotal.io/security/cve-2017-8046"&gt;CVE&lt;/a&gt;. We&amp;rsquo;ve seen some recent news about this that&amp;rsquo;s led to confusion. Here&amp;rsquo;s the scoop:&lt;/p&gt;&lt;h2&gt;&lt;a href="#tl-dr" class="anchor" name="tl-dr"&gt;&lt;/a&gt;tl;dr:&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;There was a security vulnerability allowing arbitrary code execution in Spring Data REST up to version 2.6.8 and 3.0.0.&lt;/li&gt;
+  &lt;li&gt;This vulnerability has been fixed in the following versions:&lt;br/&gt;&amp;ndash; Spring Data REST 2.6.9 (Ingalls SR9, Oct. 27th, 2017), included in Spring Boot 1.5.9 (Oct, 28th 2017).&lt;br/&gt;&amp;ndash; Spring Data REST 3.0.1 (Kay SR1, Oct. 27th 2017), included in Spring Boot 2.0 M6, (Nov. 6th 2017)&lt;/li&gt;
+  &lt;li&gt;The CVE was originally published at the end of September 2017. We originally thought that we had fixed the issue with releases that had been published a couple of days before. Subsequent feedback showed that this wasn&amp;rsquo;t the case and the issue was eventually fixed in October / November 2017. Regrettably, the CVE was not updated to reflect this. The team is working on making sure that this lack of update does not happen again.&lt;/li&gt;
+&lt;/ul&gt;&lt;h2&gt;&lt;a href="#the-reality" class="anchor" name="the-reality"&gt;&lt;/a&gt;The reality&lt;/h2&gt;
+&lt;p&gt;We saw some stories that got a few details wrong. Let&amp;rsquo;s clear things up:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;At no point in time &amp;ldquo;various Spring modules&amp;rdquo; have been affected. The issue has existed in Spring Data REST only.&lt;/li&gt;
+  &lt;li&gt;When the CVE states a Spring Boot version affected, it does &lt;em&gt;not&lt;/em&gt; mean that every Spring Boot project is affected. Only projects that use the particular Spring Data REST module are. We only state the Spring Boot versions in CVEs to allow users to quickly identify whether or not the version of Spring Boot that they are using contains a vulnerable version of Spring Data.&lt;/li&gt;
+  &lt;li&gt;Some publications create the impression that all REST APIs built with Spring ¨C including ones manually coded with Spring MVC ¨C are affected. That&amp;rsquo;s not the case. You&amp;rsquo;re only affected if you expose HTTP resources that are handled by Spring Data REST.&lt;/li&gt;
+&lt;/ul&gt;&lt;h2&gt;&lt;a href="#recommendations" class="anchor" name="recommendations"&gt;&lt;/a&gt;Recommendations&lt;/h2&gt;
+&lt;p&gt;We generally recommend to upgrade to new bugfix releases of individual Spring modules as soon as possible. The team also takes great care to coordinate releases so that a Spring Boot release bundling the latest bug- and security fixes is published very close to the releases of the ecosystem projects.&lt;/p&gt;
+&lt;p&gt;For security relevant upgrades, please make sure you monitor our &lt;a href="https://pivotal.io/security"&gt;published CVE list&lt;/a&gt; to find out about releases shipping security fixes immediately.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>Using Spring Security 5 to integrate with OAuth 2-secured services such as Facebook and GitHub</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/03/06/using-spring-security-5-to-integrate-with-oauth-2-secured-services-such-as-facebook-and-github" />
+    <category term="engineering" label="Engineering" />
+    <author>
+      <name>Craig Walls</name>
+    </author>
+    <id>tag:spring.io,2018-02-27:3190</id>
+    <updated>2018-03-06T15:01:29Z</updated>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;One of the key features in Spring Security 5 is support for writing applications that integrate with services that are secured with OAuth 2. This includes the ability to sign into an application by way of an external service such as Facebook or GitHub.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;But with a little bit of extra code, you can also obtain an OAuth 2 access token that can be used to perform authorized requests against the service&amp;#8217;s API.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;In this article, we&amp;#8217;re going to look at how to develop a Spring Boot application that, using Spring Security 5, integrates with Facebook. You can find the complete code for this article at &lt;a href="https://github.com/habuma/facebook-security5" class="bare"&gt;https://github.com/habuma/facebook-security5&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;h1 id="enabling-oauth-2-login" class="sect0"&gt;&lt;a class="anchor" href="#enabling-oauth-2-login"&gt;&lt;/a&gt;Enabling OAuth 2 login&lt;/h1&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Suppose that you want to enable users of your application to be able to sign in with Facebook. With Spring Security 5, it couldn&amp;#8217;t be any easier. All you need to do is add Spring Security&amp;#8217;s OAuth 2 client support to your project&amp;#8217;s build and then configure your application&amp;#8217;s Facebook credentials.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;First, add the Spring Security OAuth 2 client library to your Spring Boot project&amp;#8217;s build, along with the Spring Security starter dependency:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&amp;lt;dependency&amp;gt;
+  &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;
+  &amp;lt;artifactId&amp;gt;spring-boot-starter-security&amp;lt;/artifactId&amp;gt;
+&amp;lt;/dependency&amp;gt;
+&amp;lt;dependency&amp;gt;
+  &amp;lt;groupId&amp;gt;org.springframework.security&amp;lt;/groupId&amp;gt;
+  &amp;lt;artifactId&amp;gt;spring-security-oauth2-client&amp;lt;/artifactId&amp;gt;
+&amp;lt;/dependency&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Then you&amp;#8217;ll need to configure your application&amp;#8217;s client ID and client secret (which you can obtain by registering your application with Facebook at &lt;a href="https://developers.facebook.com/" class="bare"&gt;https://developers.facebook.com/&lt;/a&gt;). The properties for all OAuth 2 clients are prefixed with &lt;code&gt;spring.security.oauth2.client.registration&lt;/code&gt;. For Facebook specifically, you&amp;#8217;ll add &lt;code&gt;facebook.client-id&lt;/code&gt; and &lt;code&gt;facebook-client-secret&lt;/code&gt; properties under that prefix. In the project&amp;#8217;s &lt;code&gt;application.yml&lt;/code&gt; file, it will look something like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          facebook:
+            client-id: YOUR CLIENT ID GOES HERE
+            client-secret: YOUR CLIENT SECRET GOES HERE&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;You may also set those properties as environment variables, in a properties file, or any property source supported by Spring Boot. Of course, you&amp;#8217;ll substitute your application&amp;#8217;s own client ID and secret for the placeholder text shown in the YAML above.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;With the OAuth 2 client dependency in place and those properties set, your application will now offer authentication via Facebook. When you try to access a page without having been previously authenticated, you&amp;#8217;ll be presented a page that looks like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="imageblock"&gt;
+&lt;div class="content"&gt;
+&lt;img src="https://raw.githubusercontent.com/habuma/facebook-security5/master/article/images/FB_Link.png" alt="FB Link"&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;This page offers you the opportunity to login using any of the configured OAuth 2 clients. For our purposes, Facebook is the only option.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;After clicking on the Facebook link, you&amp;#8217;ll be redirected to Facebook. If you&amp;#8217;ve not already signed into Facebook, you&amp;#8217;ll be prompted to sign in. After signing in, and assuming you&amp;#8217;ve not already authorized this application, you&amp;#8217;ll be presented with an authorization prompt that will look something like this:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="imageblock"&gt;
+&lt;div class="content"&gt;
+&lt;img src="https://raw.githubusercontent.com/habuma/facebook-security5/master/article/images/FB_Authorities.png" alt="FB Authorities"&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;If you choose to continue (by clicking the "Continue" button), you&amp;#8217;ll be redirected back to your application and will be authenticated. (If you choose "Cancel", you&amp;#8217;ll also be redirected back to the application, but will not be successfully authenticated.)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Authentication with an external service like Facebook is a nice alternative to a traditional application login. But it&amp;#8217;s only half of the story. Once the user has logged in, you can also use that authentication to access resources on the remote service&amp;#8217;s API.&lt;/p&gt;
+&lt;/div&gt;
+&lt;h1 id="accessing-api-resources" class="sect0"&gt;&lt;a class="anchor" href="#accessing-api-resources"&gt;&lt;/a&gt;Accessing API resources&lt;/h1&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;After a successful authentication with an external OAuth 2 service, the &lt;code&gt;Authentication&lt;/code&gt; object kept in the security context is actually an &lt;code&gt;OAuth2AuthenticationToken&lt;/code&gt; which, along with help from &lt;code&gt;OAuth2AuthorizedClientService&lt;/code&gt; can avail us with an access token for making requests against the service&amp;#8217;s API.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;code&gt;Authentication&lt;/code&gt; can be obtained in many ways, including via &lt;code&gt;SecurityContextHolder&lt;/code&gt;. Once you have the &lt;code&gt;Authentication&lt;/code&gt;, you can cast it to &lt;code&gt;OAuth2AuthenticationToken&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-java" data-lang="java"&gt;Authentication authentication =
+    SecurityContextHolder
+        .getContext()
+        .getAuthentication();
+
+OAuth2AuthenticationToken oauthToken =
+    (OAuth2AuthenticationToken) authentication;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;There will be an &lt;code&gt;OAuth2AuthorizedClientService&lt;/code&gt; automatically configured as a bean in the Spring application context, so you&amp;#8217;ll only need to inject it into wherever you&amp;#8217;ll use it.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-java" data-lang="java"&gt;OAuth2AuthorizedClient client =
+    clientService.loadAuthorizedClient(
+            oauthToken.getAuthorizedClientRegistrationId(),
+            oauthToken.getName());
+
+String accessToken = client.getAccessToken().getTokenValue();&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The call to &lt;code&gt;loadAuthorizedClient()&lt;/code&gt; is given the client&amp;#8217;s registration ID, which is how the client credentials are registered in configuration--"facebook" in our example. The second parameter is the user&amp;#8217;s username. Essentially, we&amp;#8217;re asking the client service to load the &lt;code&gt;OAuth2AuthorizedClient&lt;/code&gt; for the given user and for the given service. With an &lt;code&gt;OAuth2AuthorizedClient&lt;/code&gt; in hand, it&amp;#8217;s a simple matter of asking for the access token value by calling &lt;code&gt;getAccessToken().getTokenValue()&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;We can apply this technique to flesh out a client API binding for the service. First, we&amp;#8217;ll create a base API binding class to deal with the essential task of ensuring that the access token is included in all requests:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-java" data-lang="java"&gt;public abstract class ApiBinding {
+
+  protected RestTemplate restTemplate;
+
+  public ApiBinding(String accessToken) {
+    this.restTemplate = new RestTemplate();
+    if (accessToken != null) {
+      this.restTemplate.getInterceptors()
+          .add(getBearerTokenInterceptor(accessToken));
+    } else {
+      this.restTemplate.getInterceptors().add(getNoTokenInterceptor());
+    }
+  }
+
+  private ClientHttpRequestInterceptor
+              getBearerTokenInterceptor(String accessToken) {
+    ClientHttpRequestInterceptor interceptor =
+                new ClientHttpRequestInterceptor() {
+      @Override
+      public ClientHttpResponse intercept(HttpRequest request, byte[] bytes,
+                  ClientHttpRequestExecution execution) throws IOException {
+        request.getHeaders().add("Authorization", "Bearer " + accessToken);
+        return execution.execute(request, bytes);
+      }
+    };
+    return interceptor;
+  }
+
+  private ClientHttpRequestInterceptor getNoTokenInterceptor() {
+    return new ClientHttpRequestInterceptor() {
+      @Override
+      public ClientHttpResponse intercept(HttpRequest request, byte[] bytes,
+                  ClientHttpRequestExecution execution) throws IOException {
+        throw new IllegalStateException(
+                "Can't access the API without an access token");
+      }
+    };
+  }
+
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The most significant piece of the &lt;code&gt;ApiBinding&lt;/code&gt; class is the &lt;code&gt;getBearerTokenInterceptor()&lt;/code&gt; method where a request interceptor is created for the &lt;code&gt;RestTemplate&lt;/code&gt; to ensure that the given access token is included in all requests to the API. If the given access token is &lt;code&gt;null&lt;/code&gt;, however, a special request interceptor will throw an &lt;code&gt;IllegalStateException&lt;/code&gt; without even trying to make the API request. This is acceptable and even desirable behavior for most APIs which require all requests to be authorized.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Now we can write the Facebook API binding based on the &lt;code&gt;ApiBinding&lt;/code&gt; base class:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-java" data-lang="java"&gt;public class Facebook extends ApiBinding {
+
+  private static final String GRAPH_API_BASE_URL =
+              "https://graph.facebook.com/v2.12";
+
+  public Facebook(String accessToken) {
+    super(accessToken);
+  }
+
+  public Profile getProfile() {
+    return restTemplate.getForObject(
+            GRAPH_API_BASE_URL + "/me", Profile.class);
+  }
+
+  public List&amp;lt;Post&amp;gt; getFeed() {
+    return restTemplate.getForObject(
+            GRAPH_API_BASE_URL + "/me/feed", Feed.class).getData();
+  }
+
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;As you can see, the &lt;code&gt;Facebook&lt;/code&gt; class is rather simple. All of the OAuth 2 specifics are captured in &lt;code&gt;ApiBinding&lt;/code&gt;, so this class can focus on making requests to support the operations required by the application.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Now we only need to configure a &lt;code&gt;Facebook&lt;/code&gt; bean. The bean will be request-scoped to allow for an instance to be created based on the access token from the user&amp;#8217;s &lt;code&gt;Authentication&lt;/code&gt;:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-java" data-lang="java"&gt;@Configuration
+public class SocialConfig {
+
+  @Bean
+  @RequestScope
+  public Facebook facebook(OAuth2AuthorizedClientService clientService) {
+    Authentication authentication =
+            SecurityContextHolder.getContext().getAuthentication();
+    String accessToken = null;
+    if (authentication.getClass()
+            .isAssignableFrom(OAuth2AuthenticationToken.class)) {
+      OAuth2AuthenticationToken oauthToken =
+              (OAuth2AuthenticationToken) authentication;
+      String clientRegistrationId =
+              oauthToken.getAuthorizedClientRegistrationId();
+      if (clientRegistrationId.equals("facebook")) {
+        OAuth2AuthorizedClient client = clientService.loadAuthorizedClient(
+                    clientRegistrationId, oauthToken.getName());
+        accessToken = client.getAccessToken().getTokenValue();
+      }
+    }
+    return new Facebook(accessToken);
+  }
+
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Also, because the &lt;code&gt;getFeed()&lt;/code&gt; method from the &lt;code&gt;Facebook&lt;/code&gt; API binding fetches data from the user&amp;#8217;s feed, we&amp;#8217;ll need to set &lt;code&gt;spring.security.oauth2.client.registration.facebook.scope&lt;/code&gt; to specify "user_posts" scope when authenticating the user:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          facebook:
+            client-id: YOUR CLIENT ID GOES HERE
+            client-secret: YOUR CLIENT SECRET GOES HERE
+            scope: user_posts&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;h1 id="a-more-flexible-api-binding" class="sect0"&gt;&lt;a class="anchor" href="#a-more-flexible-api-binding"&gt;&lt;/a&gt;A more flexible API binding&lt;/h1&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;You may be wondering what this has to do with Spring Social, which also offers support for signing in with an external service as well as an API binding for Facebook.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Spring Social offers sign in support with &lt;code&gt;ProviderSignInController&lt;/code&gt; and &lt;code&gt;SocialAuthenticationFilter&lt;/code&gt;. Both of those implementations leverage a &lt;code&gt;ConnectionFactory&lt;/code&gt; to provide a &lt;code&gt;ServiceProvider&lt;/code&gt; for the external service. Each of Spring Social&amp;#8217;s API bindings must provide API-specific implementations of &lt;code&gt;ConnectionFactory&lt;/code&gt; and &lt;code&gt;ServiceProvider&lt;/code&gt;. This limits Spring Social to supporting sign in with those services for whom implementations of &lt;code&gt;ConnectionFactory&lt;/code&gt; and &lt;code&gt;ServiceProvider&lt;/code&gt; is available.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;In contrast, Spring Security 5 is capable of supporting sign in with virtually any OAuth 2 or OpenID Connect service by simply providing the service details in configuration. Out of the box, Spring Security 5 offers baseline configuration for Facebook, Google, GitHub, and Okta (you only need to specify the client ID and secret). But if you must integrate with another service, you must only specify the service&amp;#8217;s details (such as the authorization URL) in your application configuration.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;As for the API binding, Spring Social&amp;#8217;s API bindings are vast, covering much of what is offered by the APIs that they target. But in reality, most applications need only a fraction of the operations supported by Spring Social. If you only need to fetch a user&amp;#8217;s feed, why must you work with a large API binding that offers hundreds of other operations? Likewise, if you only care about one or two properties of a post response, why deal with a &lt;code&gt;Post&lt;/code&gt; object that is comprehensive to what Facebook&amp;#8217;s Graph API offers? In many cases like this, it may be easier to write your own API binding, tailor-made for your application&amp;#8217;s needs.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Moreover, Spring Social&amp;#8217;s API bindings all employ &lt;code&gt;RestTemplate&lt;/code&gt; under the covers. If you&amp;#8217;d rather work with a non-blocking reactive API binding, you&amp;#8217;re out of luck. Retrofitting the API bindings to be based on &lt;code&gt;WebClient&lt;/code&gt; is no small undertaking and would essentially double the maintenance of those API bindings.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;But if you&amp;#8217;ve developed an API binding of your own, it&amp;#8217;s easy enough to swap out &lt;code&gt;RestTemplate&lt;/code&gt; for a reactive &lt;code&gt;WebClient&lt;/code&gt;, as shown in &lt;code&gt;ReactiveApiBinding&lt;/code&gt; here:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-java" data-lang="java"&gt;public abstract class ReactiveApiBinding {
+  protected WebClient webClient;
+
+  public ReactiveApiBinding(String accessToken) {
+    Builder builder = WebClient.builder();
+    if (accessToken != null) {
+      builder.defaultHeader("Authorization", "Bearer " + accessToken);
+    } else {
+      builder.exchangeFunction(
+          request -&amp;gt; {
+            throw new IllegalStateException(
+                    "Can't access the API without an access token");
+          });
+    }
+    this.webClient = builder.build();
+  }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;You may even mix-and-match &lt;code&gt;WebClient&lt;/code&gt; and &lt;code&gt;RestTemplate&lt;/code&gt; in the same API binding, applying non-blocking &lt;code&gt;WebClient&lt;/code&gt; where needed, and &lt;code&gt;RestTemplate&lt;/code&gt; where a synchronous request is sufficient.&lt;/p&gt;
+&lt;/div&gt;
+&lt;h1 id="summary" class="sect0"&gt;&lt;a class="anchor" href="#summary"&gt;&lt;/a&gt;Summary&lt;/h1&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Spring Security 5&amp;#8217;s client-side support for OAuth 2 offers the ability to login via an external service as well as the ability to consume that service&amp;#8217;s API using a token obtained from the authentication. This is just the first step toward reconciling Spring&amp;#8217;s OAuth story, which is currently spread across several projects such as Spring Social and Spring Security OAuth.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Future versions of Spring Security will continue to improve upon the OAuth 2 client support as well as take steps toward reconciling Spring&amp;#8217;s story around the server side of OAuth security. In fact, work currently underway for Spring Security 5.1.0 aims to make working with APIs even easier, effectively eliminating the need for the &lt;code&gt;ApiBinding&lt;/code&gt; class and much of the plumbing code in the configuration of the &lt;code&gt;Facebook&lt;/code&gt; bean shown in this article. Stay tuned!&lt;/p&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <title>This Week in Spring - Tuesday March 6th, 2018</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/03/05/this-week-in-spring-tuesday-march-6th-2018" />
+    <category term="engineering" label="Engineering" />
+    <author>
+      <name>Josh Long</name>
+    </author>
+    <id>tag:spring.io,2018-03-05:3202</id>
+    <updated>2018-03-05T14:53:00Z</updated>
+    <content type="html">&lt;p&gt;Hi Spring fans and welcome to another installment of &lt;em&gt;This Week in Spring&lt;/em&gt;! As I write this it&amp;rsquo;s early morning Tuesday in Sydney, Australia, where I&amp;rsquo;ve been visiting with some of Pivotal&amp;rsquo;s amazing customers, and I&amp;rsquo;m now preparing for my flight to Dubai, in six short hours, where I&amp;rsquo;ll visit some more of Pivotal&amp;rsquo;s amazing customers. Later this week I&amp;rsquo;ll be in Bangalore, India, for the &lt;a href="https://2018.agileindia.org/schedule/"&gt;amazing Agile India conference&lt;/a&gt;, and then - early next week on Tuesday - I&amp;rsquo;ll be in Boston, MA for the &lt;a href="https://springonetour.io/2018/boston"&gt;first SpringOne Tour event&lt;/a&gt;. If &lt;a href="http://twitter.com/starbuxman"&gt;you&amp;rsquo;re around don&amp;rsquo;t hesitate to say hi&lt;/a&gt;, as usual!&lt;/p&gt;
+&lt;p&gt;This week we&amp;rsquo;ve got a lot of great content celebrating the wonderful release of Spring Boot 2.0, so without further ado let&amp;rsquo;s get to it! &lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Huzzah! Spring Boot co-founder Phil Webb has &lt;a href="https://spring.io/blog/2018/03/01/spring-boot-2-0-goes-ga"&gt;just announced Spring Boot 2.0 GA&lt;/a&gt;! The new release is &lt;em&gt;packed&lt;/em&gt; with too many new features to count so what&amp;rsquo;re you doing? Get over there, read the post, say hi to &lt;a href="http://twitter.com/SpringBoot"&gt;the &lt;code&gt;@SpringBoot&lt;/code&gt;&lt;/a&gt; team on Twitter, and &lt;a href="http://start.spring.io"&gt;get started&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Join &lt;a href="https://content.pivotal.io/webinars/mar-13-introducing-spring-boot-2-0-webinar"&gt;the Spring Boot 2.0 launch webinar on March 13th&lt;/a&gt; to learn about it from the source!&lt;/li&gt;
+  &lt;li&gt;Spring Boot 2.0 is finally, at long last, here! I wrote about the journey to Spring Boot 2.0 in this Twitter thread, reviewing the history of Spring Boot from 1.0, on the 1st April 2014, to this momentous release. Click and join me &lt;a href="https://twitter.com/starbuxman/status/968960930150100992"&gt;for a #bootiful trip down memory lane&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Spring Security lead Rob Winch previews the &lt;a href="https://spring.io/blog/2018/03/05/spring-security-saml-roadmap"&gt;Spring Security SAML Roadmap&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Sandra G¨®mez has put together a &lt;a href="https://blog-es.mimacom.com/documentacion-apis-spring-rest-docs/"&gt;very nice Spanish-language post on documenting APIs with Spring REST Docs&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Guillermo Tantachuco has put together a really nice overview of Project Riff, the &lt;a href="https://content.pivotal.io/blog/building-functions-with-riff?_lrsc=13c8ab0f-8cde-49d7-a5a3-7dc3d8a562d1"&gt;new function-as-a-service offering from Pivotal that runs on top of Kubernetes&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;Spring Cloud co-founder Spencer Gibb has just &lt;a href="https://spring.io/blog/2018/03/02/spring-cloud-finchley-m8-is-available"&gt;announced Spring Cloud Finchley M8&lt;/a&gt;, the first release after the recent Spring Boot 2.0 release.&lt;/li&gt;
+  &lt;li&gt;Spring Security ninja Joe Grandja has just &lt;a href="https://spring.io/blog/2018/03/01/spring-security-oauth-boot-2-auto-config-2-0-0-released"&gt;announced the Spring Security OAuth Boot 2.0 auto-configuration has been released&lt;/a&gt;. It&amp;rsquo;s used to help users transition between the old Spring Security OAuth 2.x support and the next generation OAuth 2.0 Support in Spring Security 5. It provides users of Spring Security OAuth 2.x the same auto-configuration capabilities in a Spring Boot 2.0 based application that is currently available in Spring Boot 1.5.x. For more details please refer to the documentation.&lt;/li&gt;
+  &lt;li&gt;Spring Security lead Rob Winch chimes in on the state of &lt;a href="https://spring.io/blog/2018/03/01/spring-security-saml-and-this-week-s-saml-vulnerability"&gt;Spring Security SAML and this week&amp;rsquo;s SAML Vulnerability&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Spring Session ninja Vedran Pavi? has just announced Spring Session Apple SR1. The new release includes &lt;a href="https://spring.io/blog/2018/03/01/spring-session-apple-sr1-released"&gt;a BOM, and a number of other features&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Project Reactor ninja Simon Basl¨¦ &lt;a href="https://spring.io/blog/2018/02/28/reactor-bismuth-sr7-is-out"&gt;announced Reactor BISMUTH-SR7&lt;/a&gt;. The release was the final release needed for Spring Boot 2.0&lt;/li&gt;
+  &lt;li&gt;Spring Security lead Rob Winch has just &lt;a href="https://spring.io/blog/2018/02/28/spring-security-5-0-3-released"&gt;announced Spring Security 5.0.3&lt;/a&gt;. This release introduces a major performance improvement.&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://spring.io/blog/2018/02/28/spring-data-kay-sr5-released"&gt;Spring Data Kay SR5 released&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;The &lt;a href="https://docs.gradle.org/4.6/release-notes.html"&gt;new Gradle 4.6 is out&lt;/a&gt; and it is packed with lots of cool features including initial JUnit 5 support, initial bill-of-material (BOM) dependencies and optional dependencies support, &lt;code&gt;--fail-fast&lt;/code&gt; for tests, and custom command line flags for tasks.&lt;/li&gt;
+  &lt;li&gt;I recently spoke at the first IBM Index conference where I performed an &lt;a href="https://www.youtube.com/watch?v=CjWADhZBiXE&amp;list=PLpryjkO3KF2yh5AFr3PDgOSIcWoZFGH1E&amp;index=39"&gt;updated &lt;em&gt;Cloud Native Java&lt;/em&gt;&lt;/a&gt;. This looks at building reactive microservices with Spring Cloud.&lt;/li&gt;
+  &lt;li&gt;Looking to get into open source? &lt;a href="https://github.com/OpenFeign/feign/issues/646"&gt;Open Feign is looking for maintainers&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;This is a monolithic &lt;a href="https://github.com/mzubal/spring-boot-monolith"&gt;Spring Boot application that&amp;rsquo;s been designed to be a modular monolith&lt;/a&gt;. It&amp;rsquo;s an interesting codebase - check it out!&lt;/li&gt;
+  &lt;li&gt;Marcos Barbero&amp;rsquo;s got a really detailed post on how to build an API gateway (using Spring Cloud Netflix Zuul) that &lt;a href="http://blog.marcosbarbero.com/ha-and-zone-affinity-spring-cloud-eureka/"&gt;will resolve and route requests (with Netflix Eureka) to other services in the same zone&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;Spring and Cloud Foundry community legend Christophe has done a really nice job &lt;a href="https://medium.com/@christophef/scheduler-with-cloud-foundry-2f98d3daef35"&gt;introducing scheduled jobs in Cloud Foundry&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;This T-Mobile talk from SpringOne Platform 2017 features Brendan Aye discussing how T-Mobile built an application &lt;a href="https://www.infoq.com/presentations/t-mobile-cloud-foundry"&gt;receiving 12M daily calls with Cloud Foundry, covering the issues encountered and how they dealt with them.&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Sam McAffee looks at &lt;a href="https://medium.com/startup-patterns/why-enterprise-agile-teams-fail-4ae64f7852d6?_lrsc=c4967b80-f364-4798-912c-4bf359dfd56a"&gt;the reasons enterprises fail at agile&lt;/a&gt;. These problems are exactly the sorts of things that Pivotal helps address.&lt;/li&gt;
+  &lt;li&gt;Shamik Mitra has a nice post &lt;a href="https://dzone.com/articles/buiding-microservice-using-springboot-and-docker"&gt;on building microservices with Spring Boot and Spring Cloud&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Hot on the heels of the recent Spring Boot 2.0 release, the community project Spring Data Jest has been &lt;a href="https://twitter.com/vanr0y/status/969320129971609600?s=12"&gt;updated to Spring Boot 2.0&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;Spring Cloud Contract lead Marcin Grzejszczak introduces the theory behind consumer driven &lt;a href="https://www.slideshare.net/MarcinGrzejszczak/stick-to-the-rules-consumer-driven-contracts-201507-confitura"&gt;contracts in the slides from one of his presentations&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://twitter.com/sdkman_/status/969106848526761984?s=12"&gt;Spring Boot 2 on sdkman&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;I really liked this post, &lt;a href="https://www.azul.com/109-new-features-in-jdk-10/"&gt;&lt;em&gt;109 New Features In JDK 10&lt;/em&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;If you&amp;rsquo;ll indulge me, I think this list of, em, &lt;a href="http://www.java67.com/2018/02/10-books-java-developers-should-read-in.html?m=1#ixzz58PVGvEGA"&gt;ten books every Java developer should read in 2018&lt;/a&gt; is, well, a must-read.&lt;/li&gt;
+  &lt;li&gt;Michael Simons has a nice &lt;a href="https://jaxenter.de/spring-boot-2-spring-5-68265"&gt;piece over on JAXenter on the new Spring Boot 2.0 release&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Check out our first guide on &lt;a href="https://twitter.com/springcentral/status/969312034738159617"&gt;building reactive microservices with Spring&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Shannon Coen introduces three major improvements to &lt;a href="https://www.cloudfoundry.org/blog/three-improvements-cloud-foundry-routing-security-resiliency-consistency/"&gt;routing in Cloud Foundry supporting security, resiliency and consistency&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://twitter.com/springcentral/status/969022493129240577"&gt;https://twitter.com/springcentral/status/969022493129240577&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Here are some interesting courses &lt;a href="https://dzone.com/articles/top-5-spring-microservices-courses-with-spring-boo"&gt;introducing Spring Boot and Spring Cloud&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;The Java Revisited blog has seven reasons &lt;a href="http://javarevisited.blogspot.sg/2018/01/7-reasons-for-using-spring-to-develop-RESTful-web-service.html"&gt;to use Spring to develop RESTful services in Java&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;The &lt;em&gt;Java Revisited&lt;/em&gt; blog also has a &lt;a href="http://javarevisited.blogspot.sg/2018/02/top-20-spring-rest-interview-questions-answers-java.html#axzz58PUD5MEC"&gt;list of twenty interview questions for Java programmers&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;The &lt;em&gt;Java Revisited&lt;/em&gt; blog &lt;em&gt;also&lt;/em&gt; looked &lt;a href="http://javarevisited.blogspot.sg/2018/02/what-is-securitycontext-and-SecurityContextHolder-Spring-security.html#axzz58PUD5MEC"&gt;at Spring Security&amp;rsquo;s &lt;code&gt;SecurityContext&lt;/code&gt; and &lt;code&gt;SecurityContextHolder&lt;/code&gt;.&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;This looks promising: Spring Data ninja Christoph Strobl previews &lt;a href="https://twitter.com/SpringData/status/968789942141939713"&gt;reactive &lt;code&gt;ClientSession&lt;/code&gt; support for MongoDB&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;</content>
+  </entry>
+  <entry>
+    <title>Spring Security SAML Roadmap</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/03/05/spring-security-saml-roadmap" />
+    <category term="engineering" label="Engineering" />
+    <author>
+      <name>Rob Winch</name>
+    </author>
+    <id>tag:spring.io,2018-03-02:3198</id>
+    <updated>2018-03-05T13:54:00Z</updated>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;The Spring Security SAML project has been an integral part of the Spring ecosystem since its inception nearly 9 years ago. This critically important project was born through the incredible effort and contributions of &lt;a href="https://github.com/vschafer"&gt;Vladim¨ªr Sch?fer&lt;/a&gt;. I¡¯d like to take the time to personally thank Vladim¨ªr and our fantastic community for their tireless work. Without all of their efforts, this project would not be what it is today.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Vladim¨ªr, our amazing community, and the Spring engineering team are planning to team up to enhance Spring Security SAML to achieve the following primary goals:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="ulist"&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Ensuring all dependencies are up to date&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Ensure all Spring Security APIs do not expose any dependency APIs&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Graduate Spring Security SAML from an extension into Spring Security proper&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Starting today &lt;a href="https://github.com/fhanik"&gt;Filip Hanik&lt;/a&gt; will be working full time on Spring Security SAML to help the community push these goals forward in a timely manner. If you would like to get involved, please &lt;a href="https://github.com/spring-projects/spring-security-saml"&gt;join us&lt;/a&gt;. You may also ping me in the comments on this blog or ping us on Twitter at &lt;a href="https://twitter.com/rob_winch"&gt;@rob_winch&lt;/a&gt; and &lt;a href="https://twitter.com/fhanik"&gt;@fhanik&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;&lt;a href="http://projects.spring.io/spring-security-saml/"&gt;Project Site&lt;/a&gt; |
+&lt;a href="https://docs.spring.io/spring-security-saml/docs/current/reference/htmlsingle/"&gt;Reference&lt;/a&gt; | &lt;a href="http://stackoverflow.com/questions/tagged/spring-security"&gt;Help&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <title>Spring Cloud Finchley M8 is available</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/03/02/spring-cloud-finchley-m8-is-available" />
+    <category term="releases" label="Releases" />
+    <author>
+      <name>Spencer Gibb</name>
+    </author>
+    <id>tag:spring.io,2018-03-02:3201</id>
+    <updated>2018-03-02T21:21:05Z</updated>
+    <content type="html">&lt;p&gt;On behalf of the community, I am pleased to announce that the Milestone 8 (M8) of the &lt;a href="https://cloud.spring.io"&gt;Spring Cloud Finchley&lt;/a&gt; Release Train is available today. The release can be found in &lt;a href="https://repo.spring.io/milestone/"&gt;Spring Milestone&lt;/a&gt; repository. You can check out the Finchley &lt;a href="https://github.com/spring-projects/spring-cloud/wiki/Spring-Cloud-Finchley-Release-Notes"&gt;release notes for more information&lt;/a&gt;.&lt;/p&gt;&lt;h2&gt;&lt;a href="#notable-changes-in-the-finchley-release-train" class="anchor" name="notable-changes-in-the-finchley-release-train"&gt;&lt;/a&gt;Notable Changes in the Finchley Release Train&lt;/h2&gt;
+&lt;p&gt;Finchley.M8 is compatible with Spring Boot 2.0.0.RELEASE.&lt;/p&gt;&lt;h3&gt;&lt;a href="#spring-cloud-gateway" class="anchor" name="spring-cloud-gateway"&gt;&lt;/a&gt;Spring Cloud Gateway&lt;/h3&gt;
+&lt;p&gt;Some bug fixes and small configuration enhancements.&lt;/p&gt;&lt;h3&gt;&lt;a href="#spring-cloud-bus" class="anchor" name="spring-cloud-bus"&gt;&lt;/a&gt;Spring Cloud Bus&lt;/h3&gt;
+&lt;p&gt;Fixes for custom remote events.&lt;/p&gt;&lt;h3&gt;&lt;a href="#spring-cloud-security" class="anchor" name="spring-cloud-security"&gt;&lt;/a&gt;Spring Cloud Security&lt;/h3&gt;
+&lt;p&gt;Updated to spring-security-oauth2-autoconfigure 2.0.0.RELEASE.&lt;/p&gt;&lt;h3&gt;&lt;a href="#spring-cloud-config" class="anchor" name="spring-cloud-config"&gt;&lt;/a&gt;Spring Cloud Config&lt;/h3&gt;
+&lt;p&gt;Support for &lt;a href="http://gitee.com"&gt;Gitee&lt;/a&gt; webhooks.&lt;/p&gt;&lt;h3&gt;&lt;a href="#spring-cloud-stream" class="anchor" name="spring-cloud-stream"&gt;&lt;/a&gt;Spring Cloud Stream&lt;/h3&gt;
+&lt;p&gt;Please see the Elmhurst.RC2 &lt;a href="https://github.com/spring-cloud/spring-cloud-stream-starters/releases/tag/vElmhurst.RC2"&gt;release notes&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The following modules were updated as part of Finchley.M8:&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Module &lt;/th&gt;
+      &lt;th&gt;Version &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Gateway &lt;/td&gt;
+      &lt;td&gt;2.0.0.M8 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Bus &lt;/td&gt;
+      &lt;td&gt;2.0.0.M7 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Security &lt;/td&gt;
+      &lt;td&gt;2.0.0.M3 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Commons &lt;/td&gt;
+      &lt;td&gt;2.0.0.M8 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Config &lt;/td&gt;
+      &lt;td&gt;2.0.0.M8 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Stream &lt;/td&gt;
+      &lt;td&gt;Elmhurst.RC2 &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;As always, we welcome feedback on &lt;a href="https://github.com/spring-cloud/"&gt;GitHub&lt;/a&gt;, on &lt;a href="https://gitter.im/spring-cloud/spring-cloud"&gt;Gitter&lt;/a&gt;, on &lt;a href="http://stackoverflow.com/questions/tagged/spring-cloud"&gt;Stack Overflow&lt;/a&gt;, or on &lt;a href="https://twitter.com/SpringCloud"&gt;Twitter&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To get started with Maven with a BOM (dependency management only):&lt;/p&gt;
+&lt;pre&gt;&lt;code class="prettyprint"&gt;&amp;lt;repositories&amp;gt;&#xD;
+    &amp;lt;repository&amp;gt;&#xD;
+        &amp;lt;id&amp;gt;spring-milestones&amp;lt;/id&amp;gt;&#xD;
+        &amp;lt;name&amp;gt;Spring Milestones&amp;lt;/name&amp;gt;&#xD;
+        &amp;lt;url&amp;gt;http://repo.spring.io/milestone&amp;lt;/url&amp;gt;&#xD;
+        &amp;lt;snapshots&amp;gt;&#xD;
+            &amp;lt;enabled&amp;gt;false&amp;lt;/enabled&amp;gt;&#xD;
+        &amp;lt;/snapshots&amp;gt;&#xD;
+    &amp;lt;/repository&amp;gt;&#xD;
+&amp;lt;/repositories&amp;gt;&#xD;
+&amp;lt;dependencyManagement&amp;gt;&#xD;
+    &amp;lt;dependencies&amp;gt;&#xD;
+        &amp;lt;dependency&amp;gt;&#xD;
+            &amp;lt;groupId&amp;gt;org.springframework.cloud&amp;lt;/groupId&amp;gt;&#xD;
+            &amp;lt;artifactId&amp;gt;spring-cloud-dependencies&amp;lt;/artifactId&amp;gt;&#xD;
+            &amp;lt;version&amp;gt;Finchley.M8&amp;lt;/version&amp;gt;&#xD;
+            &amp;lt;type&amp;gt;pom&amp;lt;/type&amp;gt;&#xD;
+            &amp;lt;scope&amp;gt;import&amp;lt;/scope&amp;gt;&#xD;
+        &amp;lt;/dependency&amp;gt;&#xD;
+    &amp;lt;/dependencies&amp;gt;&#xD;
+&amp;lt;/dependencyManagement&amp;gt;&#xD;
+&amp;lt;dependencies&amp;gt;&#xD;
+    &amp;lt;dependency&amp;gt;&#xD;
+        &amp;lt;groupId&amp;gt;org.springframework.cloud&amp;lt;/groupId&amp;gt;&#xD;
+        &amp;lt;artifactId&amp;gt;spring-cloud-starter-config&amp;lt;/artifactId&amp;gt;&#xD;
+    &amp;lt;/dependency&amp;gt;&#xD;
+    &amp;lt;dependency&amp;gt;&#xD;
+        &amp;lt;groupId&amp;gt;org.springframework.cloud&amp;lt;/groupId&amp;gt;&#xD;
+        &amp;lt;artifactId&amp;gt;spring-cloud-starter-netflix-eureka-client&amp;lt;/artifactId&amp;gt;&#xD;
+    &amp;lt;/dependency&amp;gt;&#xD;
+    ...&#xD;
+&amp;lt;/dependencies&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;or with Gradle:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="prettyprint"&gt;buildscript {&#xD;
+    dependencies {&#xD;
+        classpath &amp;quot;io.spring.gradle:dependency-management-plugin:1.0.2.RELEASE&amp;quot;&#xD;
+    }&#xD;
+}&#xD;
+&#xD;
+repositories {&#xD;
+    maven {&#xD;
+        url &amp;#39;http://repo.spring.io/milestone&amp;#39;&#xD;
+    }&#xD;
+}&#xD;
+&#xD;
+apply plugin: &amp;quot;io.spring.dependency-management&amp;quot;&#xD;
+&#xD;
+dependencyManagement {&#xD;
+    imports {&#xD;
+        mavenBom &amp;#39;org.springframework.cloud:spring-cloud-dependencies:Finchley.M8&amp;#39;&#xD;
+    }&#xD;
+}&#xD;
+&#xD;
+dependencies {&#xD;
+    compile &amp;#39;org.springframework.cloud:spring-cloud-starter-config&amp;#39;&#xD;
+    compile &amp;#39;org.springframework.cloud:spring-cloud-starter-netflix-eureka-client&amp;#39;&#xD;
+    ...&#xD;
+}
+&lt;/code&gt;&lt;/pre&gt;</content>
+  </entry>
+  <entry>
+    <title>Spring Security OAuth Boot 2 Auto-config 2.0.0 Released</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/03/01/spring-security-oauth-boot-2-auto-config-2-0-0-released" />
+    <category term="releases" label="Releases" />
+    <author>
+      <name>Joe Grandja</name>
+    </author>
+    <id>tag:spring.io,2018-03-01:3197</id>
+    <updated>2018-03-01T20:53:06Z</updated>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;I&amp;#8217;m pleased to announce the release of &lt;a href="https://github.com/spring-projects/spring-security-oauth2-boot"&gt;Spring Security OAuth Boot 2 Auto-config&lt;/a&gt; 2.0.0.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;This project is intended to be used to help users transition between the old Spring Security OAuth 2.x support and the &lt;a href="https://spring.io/blog/2018/01/30/next-generation-oauth-2-0-support-with-spring-security"&gt;Next Generation OAuth 2.0 Support in Spring Security 5&lt;/a&gt;. It provides users of Spring Security OAuth 2.x the same auto-configuration capabilities in a Spring Boot 2.0 based application that is currently available in Spring Boot 1.5.x. For more details please refer to the &lt;a href="https://docs.spring.io/spring-security-oauth2-boot/docs/current-SNAPSHOT/reference/htmlsingle/"&gt;documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;&lt;a href="https://github.com/spring-projects/spring-security-oauth2-boot/"&gt;GitHub&lt;/a&gt; |
+&lt;a href="https://docs.spring.io/spring-security-oauth2-boot/docs/current-SNAPSHOT/reference/htmlsingle/"&gt;Reference&lt;/a&gt; | &lt;a href="http://stackoverflow.com/questions/tagged/spring-security"&gt;Help&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <title>Spring Security SAML and this week's SAML Vulnerability</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/03/01/spring-security-saml-and-this-week-s-saml-vulnerability" />
+    <category term="engineering" label="Engineering" />
+    <author>
+      <name>Rob Winch</name>
+    </author>
+    <id>tag:spring.io,2018-02-28:3194</id>
+    <updated>2018-03-01T19:23:00Z</updated>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;This week, the software world found out that &lt;a href="https://duo.com/blog/duo-finds-saml-vulnerabilities-affecting-multiple-implementations"&gt;SAML Vulnerabilities Affecting Multiple Implementations&lt;/a&gt; were discovered. If you use Spring Security SAML&amp;#8217;s defaults, you are not impacted by this vulnerability.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The underlying implementation that Spring Security SAML uses is Shibboleth&amp;#8217;s OpenSAML Java library. The OpenSAML Java implementation was not listed in the libraries that contain the vulnerability (Shibboleth openSAML C++ was vulnerable). However, if the &lt;code&gt;ParserPool&lt;/code&gt; &lt;a href="https://github.com/spring-projects/spring-security-saml/issues/228"&gt;has been customized&lt;/a&gt;, you may be impacted.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="not-safe-configurations"&gt;&lt;a class="anchor" href="#not-safe-configurations"&gt;&lt;/a&gt;NOT Safe Configurations&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Specifically, if the application explicitly sets the &lt;code&gt;BasicParserPool&lt;/code&gt; or the &lt;code&gt;StaticBasicParserPool&lt;/code&gt; to have &lt;code&gt;ignoreComments = false&lt;/code&gt;, it is vulnerable to the exploit. For example, the following configurations are vulnerable:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Unsafe Java Configuration with &lt;code&gt;StaticBasicParserPool&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-java" data-lang="java"&gt;// NOT secure!!!
+@Bean(initMethod = "initialize")
+ParserPool parserPool() {
+    StaticBasicParserPool pool = new StaticBasicParserPool();
+    // DO NOT set ignoreComments = false opens up exploit
+    pool.setIgnoreComments(false);
+    return pool;
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Unsafe Java Configuration with &lt;code&gt;BasicParserPool&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-java" data-lang="java"&gt;// NOT secure!!!
+@Bean
+ParserPool parserPool() {
+    BasicParserPool pool = new BasicParserPool();
+    // DO NOT set ignoreComments = false opens up exploit
+    pool.setIgnoreComments(false);
+    return pool;
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Unsafe XML Configuration with &lt;code&gt;StaticBasicParserPool&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&amp;lt;!-- NOT secure!!! --&amp;gt;
+&amp;lt;bean id="parserPool" init-method="initialize"
+           class="org.opensaml.xml.parse.StaticBasicParserPool"&amp;gt;
+    &amp;lt;!-- DO NOT set ignoreComments = false opens up exploit --&amp;gt;
+    &amp;lt;property name="ignoreComments" value="false"/&amp;gt;
+&amp;lt;/bean&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Unsafe XML Configuration with &lt;code&gt;BasicParserPool&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&amp;lt;!-- NOT secure!!! --&amp;gt;
+&amp;lt;bean id="parserPool" class="org.opensaml.xml.parse.BasicParserPool"&amp;gt;
+    &amp;lt;!-- DO NOT set ignoreComments = false opens up exploit --&amp;gt;
+    &amp;lt;property name="ignoreComments" value="false"/&amp;gt;
+&amp;lt;/bean&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="safe-configurations"&gt;&lt;a class="anchor" href="#safe-configurations"&gt;&lt;/a&gt;Safe Configurations&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The following configurations are safe:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Safe Java Configuration with &lt;code&gt;StaticBasicParserPool&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-java" data-lang="java"&gt;@Bean(initMethod = "initialize")
+ParserPool parserPool() {
+    StaticBasicParserPool pool = new StaticBasicParserPool();
+    // ignoreComments default is true (safe)
+    return pool;
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Safe Java Configuration with &lt;code&gt;BasicParserPool&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-java" data-lang="java"&gt;@Bean(initMethod = "initialize")
+ParserPool parserPool() {
+    BasicParserPool pool = new BasicParserPool();
+    // ignoreComments default is true (safe)
+    return pool;
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Safe XML Configuration with &lt;code&gt;StaticBasicParserPool&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&amp;lt;bean id="parserPool" class="org.opensaml.xml.parse.StaticBasicParserPool"&amp;gt;
+    &amp;lt;!-- ignoreComments default is true (safe) --&amp;gt;
+&amp;lt;/bean&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Safe XML Configuration with &lt;code&gt;BasicParserPool&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&amp;lt;bean id="parserPool" init-method="initialize"
+           class="org.opensaml.xml.parse.BasicParserPool"&amp;gt;
+    &amp;lt;!-- ignoreComments default is true (safe) --&amp;gt;
+&amp;lt;/bean&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect1"&gt;
+&lt;h2 id="unsafe-paserpool-configurations"&gt;&lt;a class="anchor" href="#unsafe-paserpool-configurations"&gt;&lt;/a&gt;Unsafe PaserPool Configurations&lt;/h2&gt;
+&lt;div class="sectionbody"&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Now is probably a good time to review additional &lt;a href="https://shibboleth.net/community/advisories/secadv_20131213.txt"&gt;unsafe configurations&lt;/a&gt;. Specifically, the following &lt;code&gt;ParserPool&lt;/code&gt; properties are UNSAFE:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="ulist"&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;It is UNSAFE to set &lt;code&gt;expandEntityReferences&lt;/code&gt; to &lt;code&gt;true&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;It is UNSAFE to set &lt;code&gt;javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING&lt;/code&gt; to &lt;code&gt;false&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;It is UNSAFE to set  &lt;code&gt;&lt;a href="http://apache.org/xml/features/disallow-doctype-dec" class="bare"&gt;http://apache.org/xml/features/disallow-doctype-dec&lt;/a&gt;&lt;/code&gt; to &lt;code&gt;false&lt;/code&gt;. This is a Xerces-specific feature, including derivatives such as the internal JAXP implementations supplied with the Oracle and OpenJDK JREs. For other JAXP implementations, read the documentation for your particular implementation for how to achieve a similar configuration.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;It is UNSAFE to set &lt;code&gt;ignoreComments&lt;/code&gt; to &lt;code&gt;false&lt;/code&gt; (as discussed in this article)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <title>Spring Session Apple SR1 Released</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/03/01/spring-session-apple-sr1-released" />
+    <category term="releases" label="Releases" />
+    <author>
+      <name>Rob Winch</name>
+    </author>
+    <id>tag:spring.io,2018-03-01:3196</id>
+    <updated>2018-03-01T14:43:55Z</updated>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;&lt;em&gt;This post was authored by &lt;a href="https://github.com/vpavic"&gt;Vedran Pavi?&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;On behalf of the community I&amp;#8217;m pleased to announce the release of Spring Session BOM &lt;code&gt;Apple-SR1&lt;/code&gt;. With the changes to Spring Session modules described in &lt;a href="https://spring.io/blog/2018/01/16/spring-session-2-0-0-released#spring-session-modules"&gt;&lt;code&gt;2.0.0.RELEASE&lt;/code&gt; announcement&lt;/a&gt;, the addition of &lt;a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#Importing_Dependencies"&gt;bill of materials&lt;/a&gt; (BOM) module was a logical next step.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="admonitionblock note"&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td class="icon"&gt;
+&lt;div class="title"&gt;Note&lt;/div&gt;
+&lt;/td&gt;
+&lt;td class="content"&gt;
+The originally released &lt;code&gt;Apple-RELEASE&lt;/code&gt; contained a glitch in published BOM so make sure you use &lt;code&gt;Apple-SR1&lt;/code&gt;.
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The BOM provides dependency management for Spring Session core modules (which include Data Redis, Hazelcast and JDBC) and Spring Session Data MongoDB. The following table provides an overview of all the included modules and their respective versions:&lt;/p&gt;
+&lt;/div&gt;
+&lt;table class="tableblock frame-all grid-all spread"&gt;
+&lt;colgroup&gt;
+&lt;col style="width: 50%;"&gt;
+&lt;col style="width: 50%;"&gt;
+&lt;/colgroup&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th class="tableblock halign-left valign-top"&gt;Module&lt;/th&gt;
+&lt;th class="tableblock halign-left valign-top"&gt;Version&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td class="tableblock halign-left valign-top"&gt;&lt;p class="tableblock"&gt;Spring Session Core&lt;/p&gt;&lt;/td&gt;
+&lt;td class="tableblock halign-left valign-top"&gt;&lt;p class="tableblock"&gt;&lt;code&gt;2.0.2.RELEASE&lt;/code&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td class="tableblock halign-left valign-top"&gt;&lt;p class="tableblock"&gt;Spring Session Data MongoDB&lt;/p&gt;&lt;/td&gt;
+&lt;td class="tableblock halign-left valign-top"&gt;&lt;p class="tableblock"&gt;&lt;code&gt;2.0.2.RELEASE&lt;/code&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td class="tableblock halign-left valign-top"&gt;&lt;p class="tableblock"&gt;Spring Session Data Redis&lt;/p&gt;&lt;/td&gt;
+&lt;td class="tableblock halign-left valign-top"&gt;&lt;p class="tableblock"&gt;&lt;code&gt;2.0.2.RELEASE&lt;/code&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td class="tableblock halign-left valign-top"&gt;&lt;p class="tableblock"&gt;Spring Session Hazelcast&lt;/p&gt;&lt;/td&gt;
+&lt;td class="tableblock halign-left valign-top"&gt;&lt;p class="tableblock"&gt;&lt;code&gt;2.0.2.RELEASE&lt;/code&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td class="tableblock halign-left valign-top"&gt;&lt;p class="tableblock"&gt;Spring Session JDBC&lt;/p&gt;&lt;/td&gt;
+&lt;td class="tableblock halign-left valign-top"&gt;&lt;p class="tableblock"&gt;&lt;code&gt;2.0.2.RELEASE&lt;/code&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div class="sect2"&gt;
+&lt;h3 id="spring-session"&gt;&lt;a class="anchor" href="#spring-session"&gt;&lt;/a&gt;Spring Session&lt;/h3&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;code&gt;2.0.2.RELEASE&lt;/code&gt; maintenance release contains a few bug fixes and dependency upgrades. You can find the complete details of the release in the &lt;a href="https://github.com/spring-projects/spring-session/milestone/32?closed=1"&gt;changelog&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;&lt;a href="https://github.com/spring-projects/spring-session"&gt;GitHub&lt;/a&gt; | &lt;a href="https://github.com/spring-projects/spring-session/issues"&gt;Issues&lt;/a&gt; | &lt;a href="https://docs.spring.io/spring-session/docs/2.0.2.RELEASE/reference/html5/"&gt;Documentation&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="sect2"&gt;
+&lt;h3 id="spring-session-data-mongodb"&gt;&lt;a class="anchor" href="#spring-session-data-mongodb"&gt;&lt;/a&gt;Spring Session Data MongoDB&lt;/h3&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;code&gt;2.0.2.RELEASE&lt;/code&gt; maintenance release contains Jackson serialization support improvements and dependency upgrades.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;&lt;a href="https://github.com/spring-projects/spring-session-data-mongodb"&gt;GitHub&lt;/a&gt; | &lt;a href="https://github.com/spring-projects/spring-session-data-mongodb/issues"&gt;Issues&lt;/a&gt; | &lt;a href="https://docs.spring.io/spring-session-data-mongodb/docs/2.0.2.RELEASE/reference/htmlsingle/"&gt;Documentation&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;h1 id="using-the-bom" class="sect0"&gt;&lt;a class="anchor" href="#using-the-bom"&gt;&lt;/a&gt;Using the BOM&lt;/h1&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;With Maven:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&amp;lt;dependencyManagement&amp;gt;
+	&amp;lt;dependencies&amp;gt;
+		&amp;lt;dependency&amp;gt;
+			&amp;lt;groupId&amp;gt;org.springframework.session&amp;lt;/groupId&amp;gt;
+			&amp;lt;artifactId&amp;gt;spring-session-bom&amp;lt;/artifactId&amp;gt;
+			&amp;lt;version&amp;gt;Apple-SR1&amp;lt;/version&amp;gt;
+			&amp;lt;type&amp;gt;pom&amp;lt;/type&amp;gt;
+			&amp;lt;scope&amp;gt;import&amp;lt;/scope&amp;gt;
+		&amp;lt;/dependency&amp;gt;
+	&amp;lt;/dependencies&amp;gt;
+&amp;lt;/dependencyManagement&amp;gt;
+&amp;lt;dependencies&amp;gt;
+	&amp;lt;dependency&amp;gt;
+		&amp;lt;groupId&amp;gt;org.springframework.session&amp;lt;/groupId&amp;gt;
+		&amp;lt;artifactId&amp;gt;spring-session-data-redis&amp;lt;/artifactId&amp;gt;
+	&amp;lt;/dependency&amp;gt;
+	...
+&amp;lt;/dependencies&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;With Gradle:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="listingblock"&gt;
+&lt;div class="content"&gt;
+&lt;pre class="prettyprint highlight"&gt;&lt;code class="language-gradle" data-lang="gradle"&gt;plugins {
+	id 'io.spring.dependency-management' version '1.0.4.RELEASE'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom 'org.springframework.session:spring-session-bom:Apple-SR1'
+	}
+}
+
+dependencies {
+	compile 'org.springframework.session:spring-session-data-redis'
+	...
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;&lt;a href="https://projects.spring.io/spring-session/"&gt;Project Page&lt;/a&gt; | &lt;a href="https://stackoverflow.com/questions/tagged/spring-session"&gt;Stack Overflow&lt;/a&gt; | &lt;a href="https://gitter.im/spring-projects/spring-session"&gt;Gitter&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <title>Spring Boot 2.0 goes GA</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/03/01/spring-boot-2-0-goes-ga" />
+    <category term="releases" label="Releases" />
+    <author>
+      <name>Phil Webb</name>
+    </author>
+    <id>tag:spring.io,2018-03-01:3195</id>
+    <updated>2018-03-01T07:05:00Z</updated>
+    <content type="html">&lt;p&gt;On behalf of the team, it is my very great pleasure to announce that Spring Boot 2.0 is now generally available as &lt;code&gt;2.0.0.RELEASE&lt;/code&gt; from &lt;a href="http://repo.spring.io/release/"&gt;repo.spring.io&lt;/a&gt; and &lt;a href="https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.springframework.boot%22"&gt;Maven Central&lt;/a&gt;!&lt;/p&gt;
+&lt;p&gt;This release is the culmination of 17 months work and over &lt;a href="https://github.com/spring-projects/spring-boot/compare/6643ec37130ad589b03d747aa6171fc5e8652e08...7d7cf6aa35b872596b6dd2078dc3682e41e25a2a"&gt;6800 commits&lt;/a&gt; by 215 different individuals. A massive thank you to everyone that has contributed, and to all the early adopters that have been providing vital feedback on the milestones.&lt;/p&gt;
+&lt;p&gt;This is the first major revision of Spring Boot since 1.0 was released almost 4 years ago. It&amp;rsquo;s also the first GA version of Spring Boot that provides support for &lt;a href="https://spring.io/blog/2017/09/28/spring-framework-5-0-goes-ga"&gt;Spring Framework 5.0&lt;/a&gt;. &lt;/p&gt;
+&lt;p&gt;Highlights of the new release include:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;A Java 8 baseline, and Java 9 support.&lt;/li&gt;
+  &lt;li&gt;Reactive web programming support with Spring WebFlux/WebFlux.fn.&lt;/li&gt;
+  &lt;li&gt;Auto-configuration and starter POMs for reactive Spring Data Cassandra, MongoDB, Couchbase and Redis.&lt;/li&gt;
+  &lt;li&gt;Support for embedded Netty.&lt;/li&gt;
+  &lt;li&gt;HTTP/2 for Tomcat, Undertow and Jetty.&lt;/li&gt;
+  &lt;li&gt;Kotlin support.&lt;/li&gt;
+  &lt;li&gt;A brand new actuator architecture, with support for Spring MVC, WebFlux and Jersey.&lt;/li&gt;
+  &lt;li&gt;&lt;a href="http://micrometer.io/"&gt;Micrometer&lt;/a&gt; based metrics with exporters for Atlas, Datadog, Ganglia, Graphite, Influx, JMX, New Relic, Prometheus, SignalFx, StatsD and Wavefront.&lt;/li&gt;
+  &lt;li&gt;Quartz scheduler support.&lt;/li&gt;
+  &lt;li&gt;Greatly simplified security auto-configuration.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;There&amp;rsquo;s far too many features to list them all here in detail, so head over to the &lt;a href="https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Release-Notes"&gt;release notes&lt;/a&gt; page on our wiki to find out more. If you&amp;rsquo;re upgrading an existing Spring Boot application you&amp;rsquo;ll also want to check out the &lt;a href="https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Migration-Guide"&gt;migration guide&lt;/a&gt;. If you just want to get started, you can easily bootstrap a new project on &lt;a href="https://start.spring.io"&gt;start.spring.io&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Over the next couple of weeks we&amp;rsquo;ll be publishing blog posts that cover some Spring Boot 2.0 features in detail. You should also join us for &lt;a href="https://content.pivotal.io/webinars/mar-13-introducing-reactive-spring-boot-2-0-webinar"&gt;a webinar on March 13th&lt;/a&gt; where we&amp;rsquo;ll dive deeper into what&amp;rsquo;s new.&lt;/p&gt;
+&lt;p&gt;Thanks again to everyone that has contributed to Spring and Spring Boot over the years! A special thank you also to the developers of the other projects in the Spring portfolio, without whom there would be no Spring Boot.&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://projects.spring.io/spring-boot/"&gt;Project Page&lt;/a&gt; | &lt;a href="https://github.com/spring-projects/spring-boot"&gt;GitHub&lt;/a&gt; | &lt;a href="https://github.com/spring-projects/spring-boot/issues"&gt;Issues&lt;/a&gt; | &lt;a href="http://docs.spring.io/spring-boot/docs/2.0.0.RELEASE/reference/htmlsingle"&gt;Documentation&lt;/a&gt; | &lt;a href="http://stackoverflow.com/questions/tagged/spring-boot"&gt;Stack Overflow&lt;/a&gt; | &lt;a href="https://gitter.im/spring-projects/spring-boot"&gt;Gitter&lt;/a&gt;&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>Reactor BISMUTH-SR7 is out!</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/02/28/reactor-bismuth-sr7-is-out" />
+    <category term="releases" label="Releases" />
+    <author>
+      <name>Simon Basl¨¦</name>
+    </author>
+    <id>tag:spring.io,2018-02-27:3187</id>
+    <updated>2018-02-28T17:20:00Z</updated>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;On behalf of the whole Reactor Team, it is my pleasure to announce that the
+Reactor &lt;code&gt;BISMUTH-SR7&lt;/code&gt; release train is now available. As always, we recommend
+using the &lt;a href="http://projectreactor.io/docs/core/release/reference/docs/index.html#getting"&gt;&lt;code&gt;reactor-bom&lt;/code&gt; Bill Of Material&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;In time for Spring Boot 2, this release train comes with improvements and
+bugfixes to core, extras, and reactor-netty.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;&lt;em&gt;This blog post highlights
+the most significant changes in both SR7 and last week&amp;#8217;s SR6 release trains.&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;h1 id="reactor-core-3-1-5" class="sect0"&gt;&lt;a class="anchor" href="#reactor-core-3-1-5"&gt;&lt;/a&gt;Reactor-Core 3.1.5&lt;/h1&gt;
+&lt;div class="quoteblock"&gt;
+&lt;blockquote&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;What&amp;#8217;s new since &lt;code&gt;3.1.3&lt;/code&gt;? See the full release notes of the
+&lt;a href="https://github.com/reactor/reactor-core/releases/tag/v3.1.4.RELEASE"&gt;&lt;code&gt;3.1.4.RELEASE&lt;/code&gt;&lt;/a&gt;
+and the &lt;a href="https://github.com/reactor/reactor-core/releases/tag/v3.1.5.RELEASE"&gt;&lt;code&gt;3.1.5.RELEASE&lt;/code&gt;&lt;/a&gt;.
+Core changes include more than 15 improvements and bugfixes.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;A few new operators have landed in this release: For example, &lt;code&gt;mergeOrdered&lt;/code&gt; has been added to &lt;code&gt;Flux&lt;/code&gt; and &lt;code&gt;ParallelFlux&lt;/code&gt;. It lets you merge multiple sources by continuously picking the smallest available value among all the sources, as defined by a provided &lt;code&gt;Comparator&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;For convenience, we also added &lt;code&gt;Flux#concatWithValues(T&amp;#8230;&amp;#8203;)&lt;/code&gt; and &lt;code&gt;Mono#thenReturn(T)&lt;/code&gt; , allowing easy concatenation/continuation with scalar values.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;To kickstart our introspection theme of 2018, our implementations of &lt;code&gt;Scheduler&lt;/code&gt; are &lt;code&gt;Scannable&lt;/code&gt; and are thus meaningful when used with &lt;code&gt;Scannable#from&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Notable update considerations include the fix of &lt;code&gt;Mono.zip&lt;/code&gt; behavior, aligning it to that of &lt;code&gt;Flux.zip&lt;/code&gt;: It now cancels in-flight sources as soon as one source completes with &lt;strong&gt;empty&lt;/strong&gt; or throws an error. If all the &lt;code&gt;Mono&lt;/code&gt; sources you &lt;code&gt;zip&lt;/code&gt; together are guaranteed to be value, this changes nothing.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="admonitionblock tip"&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td class="icon"&gt;
+&lt;div class="title"&gt;Tip&lt;/div&gt;
+&lt;/td&gt;
+&lt;td class="content"&gt;
+If you don&amp;#8217;t care about the results but want to make sure the whole of N sources have all completed, prefer using &lt;code&gt;Mono.when&lt;/code&gt;. In particular, look out for a &lt;code&gt;.zip(&amp;#8230;&amp;#8203;).then()&lt;/code&gt; pattern, which should be replaced by &lt;code&gt;.when(&amp;#8230;&amp;#8203;)&lt;/code&gt;.
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Another change that is less likely to have been noticed by our users is fixing the visibility of a couple of classes that were never intended for the public:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="ulist"&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The MPSC Queue implementation from 3.1.3.RELEASE is now exposed &lt;strong&gt;only&lt;/strong&gt; as a plain &lt;code&gt;Queue&lt;/code&gt; through &lt;code&gt;Queues.unboundedMultiproducer()&lt;/code&gt;. This concrete class is now package-private.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;FluxDelaySequence&lt;/code&gt;, &lt;code&gt;FluxIndex&lt;/code&gt; and &lt;code&gt;FluxIndexFuseable&lt;/code&gt; are now also package-private.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Bug fixes also include a few GC-friendly fixes, stopping unnecessary retaining of &lt;code&gt;elastic&lt;/code&gt; &lt;code&gt;Scheduler&lt;/code&gt; workers and event-loop based Processors' background task in case of &lt;code&gt;forceShutdown()&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;h1 id="reactor-addons-3-1-6" class="sect0"&gt;&lt;a class="anchor" href="#reactor-addons-3-1-6"&gt;&lt;/a&gt;Reactor Addons 3.1.6&lt;/h1&gt;
+&lt;div class="quoteblock"&gt;
+&lt;blockquote&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;What&amp;#8217;s new since &lt;code&gt;3.1.4&lt;/code&gt;? See the full release notes of the
+&lt;a href="https://github.com/reactor/reactor-addons/releases/tag/v3.1.5.RELEASE"&gt;&lt;code&gt;3.1.5.RELEASE&lt;/code&gt;&lt;/a&gt;
+and the &lt;a href="https://github.com/reactor/reactor-addons/releases/tag/v3.1.6.RELEASE"&gt;&lt;code&gt;3.1.6.RELEASE&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Addons has seen a couple of fixes and improvements.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The newly introduced opinionated helper for caching was released with a few package-private interfaces that should have been &lt;code&gt;public&lt;/code&gt;. This is embarrassing. :( It has now been fixed.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;A new &lt;code&gt;Repeat#create&lt;/code&gt; factory method variant has been introduced. It allows combining a &lt;code&gt;Predicate&lt;/code&gt; and a maximum amount of repeat attempts.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="admonitionblock note"&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td class="icon"&gt;
+&lt;div class="title"&gt;Note&lt;/div&gt;
+&lt;/td&gt;
+&lt;td class="content"&gt;
+Speaking of &lt;code&gt;Repeat&lt;/code&gt; and its sister, &lt;code&gt;Retry&lt;/code&gt;, some user noticed that the default behavior feels a bit misaligned with the core&amp;#8217;s dumbed-down &lt;code&gt;repeat()&lt;/code&gt; and &lt;code&gt;retry()&lt;/code&gt; variants: Without further configuration, the helpers are capped at a single attempt, where the core versions keep on repeating or retrying. Furthermore, this is changed by chaining in &lt;code&gt;timeout&lt;/code&gt;, which switches to an uncapped attempt behavior (which has been clarified in its javadoc).
+&lt;br&gt;
+&lt;br&gt;
+We are thinking about realigning this behavior with core in &lt;code&gt;3.2.0&lt;/code&gt;. Please chime in on the &lt;a href="https://github.com/reactor/reactor-addons/issues/149"&gt;issue&lt;/a&gt; if you have any insight or feedback.
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;h1 id="reactor-netty-0-7-5" class="sect0"&gt;&lt;a class="anchor" href="#reactor-netty-0-7-5"&gt;&lt;/a&gt;Reactor-Netty 0.7.5&lt;/h1&gt;
+&lt;div class="quoteblock"&gt;
+&lt;blockquote&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;What&amp;#8217;s new since &lt;code&gt;0.7.3&lt;/code&gt;? See the full release notes of the
+&lt;a href="https://github.com/reactor/reactor-netty/releases/tag/v0.7.4.RELEASE"&gt;&lt;code&gt;0.7.4.RELEASE&lt;/code&gt;&lt;/a&gt;
+and the &lt;a href="https://github.com/reactor/reactor-netty/releases/tag/v0.7.5.RELEASE"&gt;&lt;code&gt;0.7.5.RELEASE&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Reactor-Netty has also seen quite a few fixes, mostly around pooling and the connection lifecycle.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;New goodies include support for expect 100-continue, as well as better Reactor &lt;code&gt;Context&lt;/code&gt; handling, by passing Netty pipelines to it when relevant.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Compression support has also been improved, allowing per-response activation of compression.
+This slightly supersedes the &lt;code&gt;minCompressionThreshold&lt;/code&gt; feature that was already in place (albeit it was not 100% reliable). It is based on a &lt;code&gt;BiPredicate&amp;lt;Req,Resp&amp;gt;&lt;/code&gt; that could, for instance, activate compression only on certain content types. The minimum compression threshold option is backed by a &lt;code&gt;content-length&lt;/code&gt; predicate.&lt;/p&gt;
+&lt;/div&gt;
+&lt;h1 id="what-s-next" class="sect0"&gt;&lt;a class="anchor" href="#what-s-next"&gt;&lt;/a&gt;What&amp;#8217;s Next&lt;/h1&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;We encourage you to grab these new artifacts, but, if you&amp;#8217;re a Spring Boot user, you&amp;#8217;ll be delighted to learn you&amp;#8217;ll be rewarded with the same goodies as soon as you upgrade to the upcoming Spring Boot 2.0.0 GA release. :)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;As always, feedback is welcome. Come and discuss this release on &lt;a href="https://gitter.im/reactor/reactor"&gt;Gitter&lt;/a&gt; or consider opening an &lt;a href="https://github.com/reactor/reactor-core/issues/new"&gt;issue on GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;&lt;strong&gt;In the meantime, happy reactive coding!&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <title>Spring Security 5.0.3 Released</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/02/28/spring-security-5-0-3-released" />
+    <category term="releases" label="Releases" />
+    <author>
+      <name>Rob Winch</name>
+    </author>
+    <id>tag:spring.io,2018-02-28:3193</id>
+    <updated>2018-02-28T16:53:50Z</updated>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;I&amp;#8217;m pleased to announce the release of Spring Security 5.0.3.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The main purpose of this release is to provide a significant &lt;a href="https://github.com/spring-projects/spring-security/issues/5040"&gt;performance improvement&lt;/a&gt; for Spring Security WebFlux. It also contains dependency updates to prepare for Spring Boot 2.0.0.RELEASE. For a complete list of changes, refer to the &lt;a href="https://github.com/spring-projects/spring-security/milestone/111?closed=1"&gt;changelog&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;&lt;a href="http://projects.spring.io/spring-security/"&gt;Project Site&lt;/a&gt; |
+&lt;a href="http://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/"&gt;Reference&lt;/a&gt; | &lt;a href="http://stackoverflow.com/questions/tagged/spring-security"&gt;Help&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <title>Spring Data Kay SR5 released</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/02/28/spring-data-kay-sr5-released" />
+    <category term="releases" label="Releases" />
+    <author>
+      <name>Mark Paluch</name>
+    </author>
+    <id>tag:spring.io,2018-02-28:3192</id>
+    <updated>2018-02-28T11:35:13Z</updated>
+    <content type="html">&lt;p&gt;On behalf of the Spring Data team, I&amp;rsquo;d like to announce the fifth service release of the Kay release train in prospect of Spring Boot 2.0 GA.&lt;/p&gt;
+&lt;p&gt;This service release ships with &lt;a href="https://jira.spring.io/issues/?filter=15839"&gt;23 tickets fixed&lt;/a&gt;. Kay SR5 will be picked up by Spring Boot 2.0 GA for your convenience and is a strongly recommended upgrade to users of the Kay release train. &lt;/p&gt;
+&lt;p&gt;You can find all details within the linked changelogs.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Spring Data Commons 2.0.5 - &lt;a href="https://repo.spring.io/libs-release/org/springframework/data/spring-data-commons/2.0.5.RELEASE"&gt;Artifacts&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/commons/docs/2.0.5.RELEASE/api"&gt;JavaDocs&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/commons/docs/2.0.5.RELEASE/reference/html"&gt;Documentation&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/commons/docs/2.0.5.RELEASE/changelog.txt"&gt;Changelog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Spring Data JPA 2.0.5 - &lt;a href="https://repo.spring.io/libs-release/org/springframework/data/spring-data-jpa/2.0.5.RELEASE"&gt;Artifacts&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/jpa/docs/2.0.5.RELEASE/api"&gt;JavaDocs&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/jpa/docs/2.0.5.RELEASE/reference/html"&gt;Documentation&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/jpa/docs/2.0.5.RELEASE/changelog.txt"&gt;Changelog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Spring Data for Apache Cassandra 2.0.5 - &lt;a href="https://repo.spring.io/libs-release/org/springframework/data/spring-data-cassandra/2.0.5.RELEASE"&gt;Artifacts&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/cassandra/docs/2.0.5.RELEASE/api"&gt;JavaDocs&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/cassandra/docs/2.0.5.RELEASE/reference/html"&gt;Documentation&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/cassandra/docs/2.0.5.RELEASE/changelog.txt"&gt;Changelog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Spring Data KeyValue 2.0.5 - &lt;a href="https://repo.spring.io/libs-release/org/springframework/data/spring-data-keyvalue/2.0.5.RELEASE"&gt;Artifacts&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/keyvalue/docs/2.0.5.RELEASE/api"&gt;JavaDocs&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/keyvalue/docs/2.0.5.RELEASE/reference/html"&gt;Documentation&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/keyvalue/docs/2.0.5.RELEASE/changelog.txt"&gt;Changelog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Spring Data for Apache Solr 3.0.5 - &lt;a href="https://repo.spring.io/libs-release/org/springframework/data/spring-data-solr/3.0.5.RELEASE"&gt;Artifacts&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/solr/docs/3.0.5.RELEASE/api"&gt;JavaDocs&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/solr/docs/3.0.5.RELEASE/reference/html"&gt;Documentation&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/solr/docs/3.0.5.RELEASE/changelog.txt"&gt;Changelog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Spring Data Gemfire 2.0.5 - &lt;a href="https://repo.spring.io/libs-release/org/springframework/data/spring-data-gemfire/2.0.5.RELEASE"&gt;Artifacts&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/gemfire/docs/2.0.5.RELEASE/api"&gt;JavaDocs&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/gemfire/docs/2.0.5.RELEASE/reference/html"&gt;Documentation&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/gemfire/docs/2.0.5.RELEASE/changelog.txt"&gt;Changelog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Spring Data Neo4j 5.0.5 - &lt;a href="https://repo.spring.io/libs-release/org/springframework/data/spring-data-neo4j/5.0.5.RELEASE"&gt;Artifacts&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/neo4j/docs/5.0.5.RELEASE/api"&gt;JavaDocs&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/neo4j/docs/5.0.5.RELEASE/reference/html"&gt;Documentation&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/neo4j/docs/5.0.5.RELEASE/changelog.txt"&gt;Changelog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Spring Data MongoDB 2.0.5 - &lt;a href="https://repo.spring.io/libs-release/org/springframework/data/spring-data-mongodb/2.0.5.RELEASE"&gt;Artifacts&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/mongodb/docs/2.0.5.RELEASE/api"&gt;JavaDocs&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/mongodb/docs/2.0.5.RELEASE/reference/html"&gt;Documentation&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/mongodb/docs/2.0.5.RELEASE/changelog.txt"&gt;Changelog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Spring Data for Apache Geode 2.0.5 - &lt;a href="https://repo.spring.io/libs-release/org/springframework/data/spring-data-geode/2.0.5.RELEASE"&gt;Artifacts&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/geode/docs/2.0.5.RELEASE/api"&gt;JavaDocs&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/geode/docs/2.0.5.RELEASE/reference/html"&gt;Documentation&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/geode/docs/2.0.5.RELEASE/changelog.txt"&gt;Changelog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Spring Data LDAP 2.0.5 - &lt;a href="https://repo.spring.io/libs-release/org/springframework/data/spring-data-ldap/2.0.5.RELEASE"&gt;Artifacts&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/ldap/docs/2.0.5.RELEASE/api"&gt;JavaDocs&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/ldap/docs/2.0.5.RELEASE/reference/html"&gt;Documentation&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/ldap/docs/2.0.5.RELEASE/changelog.txt"&gt;Changelog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Spring Data Envers 2.0.5 - &lt;a href="https://repo.spring.io/libs-release/org/springframework/data/spring-data-envers/2.0.5.RELEASE"&gt;Artifacts&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/envers/docs/2.0.5.RELEASE/api"&gt;JavaDocs&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/envers/docs/2.0.5.RELEASE/reference/html"&gt;Documentation&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Spring Data REST 3.0.5 - &lt;a href="https://repo.spring.io/libs-release/org/springframework/data/spring-data-rest-webmvc/3.0.5.RELEASE"&gt;Artifacts&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/rest/docs/3.0.5.RELEASE/api"&gt;JavaDocs&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/rest/docs/3.0.5.RELEASE/reference/html"&gt;Documentation&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/rest/docs/3.0.5.RELEASE/changelog.txt"&gt;Changelog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Spring Data Redis 2.0.5 - &lt;a href="https://repo.spring.io/libs-release/org/springframework/data/spring-data-redis/2.0.5.RELEASE"&gt;Artifacts&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/redis/docs/2.0.5.RELEASE/api"&gt;JavaDocs&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/redis/docs/2.0.5.RELEASE/reference/html"&gt;Documentation&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/redis/docs/2.0.5.RELEASE/changelog.txt"&gt;Changelog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Spring Data Elasticsearch 3.0.5 - &lt;a href="https://repo.spring.io/libs-release/org/springframework/data/spring-data-elasticsearch/3.0.5.RELEASE"&gt;Artifacts&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/elasticsearch/docs/3.0.5.RELEASE/api"&gt;JavaDocs&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/elasticsearch/docs/3.0.5.RELEASE/reference/html"&gt;Documentation&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/elasticsearch/docs/3.0.5.RELEASE/changelog.txt"&gt;Changelog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Spring Data Couchbase 3.0.5 - &lt;a href="https://repo.spring.io/libs-release/org/springframework/data/spring-data-couchbase/3.0.5.RELEASE"&gt;Artifacts&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/couchbase/docs/3.0.5.RELEASE/api"&gt;JavaDocs&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/couchbase/docs/3.0.5.RELEASE/reference/html"&gt;Documentation&lt;/a&gt; - &lt;a href="http://docs.spring.io/spring-data/couchbase/docs/3.0.5.RELEASE/changelog.txt"&gt;Changelog&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+  </entry>
+  <entry>
+    <title>This Week in Spring  - February 27th, 2018</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/02/28/this-week-in-spring-february-27th-2018" />
+    <category term="engineering" label="Engineering" />
+    <author>
+      <name>Josh Long</name>
+    </author>
+    <id>tag:spring.io,2018-02-28:3191</id>
+    <updated>2018-02-28T01:36:00Z</updated>
+    <content type="html">&lt;p&gt;Hi Spring fans and welcome to another installment of &lt;em&gt;Spring Tips&lt;/em&gt;! This is a &lt;em&gt;super&lt;/em&gt; exciting week! &lt;a href="http://twitter.com/SpringBoot"&gt;Spring Boot 2.0&lt;/a&gt; is coming! Keep your eyes &lt;a href="http://start.spring.io"&gt;on the Spring Initializr&lt;/a&gt; or you&amp;rsquo;ll miss it! :D&lt;/p&gt;
+&lt;p&gt;Today I was at the Okta Iterate conference talking to developers who are using Spring and Okta, thanks to &lt;a href="https://twitter.com/mraible"&gt;my buddy Matt Raible&lt;/a&gt;. High point? I got to meet &lt;a href="http://twitter.com/CodingHorror"&gt;Jeff Atwood&lt;/a&gt;, the co-creator of Stack Overflow!&lt;/p&gt;
+&lt;img src = "https://pbs.twimg.com/media/DXEoZzJV4AAo8sk.jpg:large" width = "500" /&gt;
+&lt;p&gt;Tomorrow, I begin a whirlwind tour over the next two weeks. First, it&amp;rsquo;s off to Glasgow, Scotland; then Sydney, Australia; then Dubai; then Bangalore, India (&lt;a href="https://2018.agileindia.org/"&gt;for Agile India 2018&lt;/a&gt;); and then it&amp;rsquo;s off to Boston, Massachusetts &lt;a href="https://springonetour.io/2018/boston"&gt;for the SpringOne Tour event on March 13th&lt;/a&gt;. If you&amp;rsquo;re in any of those places, &lt;a href="http://twitter.com/Starbuxman"&gt;don&amp;rsquo;t hesitate to reach out&lt;/a&gt;! I&amp;rsquo;m elated to see and hear from you!&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;I love this &lt;a href="https://content.pivotal.io/blog/building-functions-with-riff"&gt;blog introducing Project Riff&lt;/a&gt; - the function-as-a-service from Pivotal.&lt;/li&gt;
+  &lt;li&gt;Spring Cloud Stream lead Oleg Zhurakousky &lt;a href="https://spring.io/blog/2018/02/23/spring-cloud-stream-elmhurst-rc1-2-0-0-rc1-release-announcement"&gt;just announced Spring Cloud Stream Elhurst RC1 and 2.0.0.RC1&lt;/a&gt;. The new release brings in a whole slew of features (pollable consumers, &lt;code&gt;@StreamListener&lt;/code&gt; message conversion configuration, and much more) and several enhancements (optionally supports Spring WebFlux or Servlet-based autoconfiguration, more approachable arrangement of options on the Spring Initializr, and a saner default for logging).&lt;/li&gt;
+  &lt;li&gt;Spring Security ninja &lt;a href="https://spring.io/blog/2018/02/27/spring-security-oauth-2-3-0-rc1-released"&gt;Joe Grandja has just announced Spring Security 2.3.0.RC1&lt;/a&gt; which adds new support for Elliptic Curve signature verification in &lt;code&gt;JwkTokenStore&lt;/code&gt;. This release also includes a few minor enhancements and bug fixes.&lt;/li&gt;
+  &lt;li&gt;Want to learn more &lt;a href="https://github.com/spring-cloud/spring-cloud-contract/issues/434"&gt;about using Spring Cloud Contract with Kotlin&lt;/a&gt;, check out the issue that started it all. Presently, Spring Cloud Kotlin definitions are authored in Groovy. This new DSL grows the audience. This is a nice addition to the recent support for Spring Cloud Contract and &lt;code&gt;.yml&lt;/code&gt; properties.&lt;/li&gt;
+  &lt;li&gt;Spring Integration ninja &lt;a href="https://spring.io/blog/2018/02/21/spring-integration-5-0-2-available"&gt;Artem Bilan has a nice post on the latest release, 5.0.2, of Spring Integration which now supports Micrometer-metrics publication&lt;/a&gt;, an updated &lt;code&gt;UnicastReceivingChannelAdapter&lt;/code&gt;, support for the &lt;code&gt;IntegrationGraphController&lt;/code&gt;, and dynamic filter configuration on &lt;code&gt;MessageChannel&lt;/code&gt;s. Check it out!&lt;/li&gt;
+  &lt;li&gt;Spring Boot legend Andy Wilkinson has just announced Spring Boot 2.0.0.RC2. This is the last release before the &lt;em&gt;VERY&lt;/em&gt; imminent 2.0.GA release. Get the bits and try it out now! Or.. just wait a matter of hours or days and you&amp;rsquo;ll &lt;a href="https://spring.io/blog/2018/02/21/spring-boot-2-0-0-rc2"&gt;be able to use Spring Boot 2.0.GA&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Spring Security lead Rob Winch has &lt;a href="https://spring.io/blog/2018/02/20/spring-security-5-0-2-released"&gt;just announced Spring Security 5.0.2&lt;/a&gt;), complete with bug fixes aplenty&lt;/li&gt;
+  &lt;li&gt;Spring Data ninja and Spring Vault lead Mark Paluch &lt;a href="https://spring.io/blog/2018/02/20/spring-vault-2-0-ga-released"&gt;just announced Spring Vault 2.0.GA&lt;/a&gt;. The release upgrades to Java 8 and Spring Framework 5, reactive support, improved null-safety by providing JSR-305 annotated API, Vault repository support through Spring Data KeyValue repositories, Kubernetes / AWS ECS/IAM authentication, &lt;code&gt;RoleId&lt;/code&gt;/&lt;code&gt;SecretId&lt;/code&gt; unwrapping for &lt;code&gt;AppId&lt;/code&gt; authentication, Spring Security integration with &lt;code&gt;VaultBytesEncryptor&lt;/code&gt; and &lt;code&gt;VaultRandomBytesKeyGenerator&lt;/code&gt; and more!&lt;/li&gt;
+  &lt;li&gt;Matt Raible updated &lt;a href="https://www.youtube.com/watch?v=kBaitgdcNWo"&gt;his screencast&lt;/a&gt; on how to get started with Spring Boot, SAML, and @okta. As he says: &amp;ldquo;Thanks to @SpringSecurity&amp;rsquo;s SAML DSL project, you can do it in minutes!&amp;rdquo;&lt;/li&gt;
+  &lt;li&gt;Make sure you check out the early acess builds to &lt;a href="http://jdk.java.net/11/"&gt;Java 11&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://twitter.com/springcloud/status/968582057411665920"&gt;Spring Cloud Finchley.M7&lt;/a&gt; has been released. This new release sees enhancements to Spring Cloud Gateway, Feign gets a top level project and more.&lt;/li&gt;
+  &lt;li&gt;This is an &lt;a href="https://twitter.com/olivergierke/status/968503357882105856?s=12"&gt;interesting thread&lt;/a&gt; from Spring Data lead Oliver Gierke: too much focus on distribution and not on decentralization. Might be worth watching this thread for replies.&lt;/li&gt;
+  &lt;li&gt;We&amp;rsquo;d love your feedback on &lt;a href="https://twitter.com/i/web/status/968577741669978113"&gt;Cloud Foundry distributions&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;The &lt;a href="http://springonetour.io/2018/boston"&gt;SpringOne Tour&lt;/a&gt; is stopping in Boston, MA March 13 and 14. Do &lt;em&gt;not&lt;/em&gt; miss it!&lt;/li&gt;
+  &lt;li&gt;Check out the latest features in the latest &lt;a href="https://twitter.com/springcentral/status/968541178403504128"&gt;release of Spring Tool Suite 4&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Check out this InfoQ review of the AxonDB event store. It works perfectly with Axon, a&lt;br/&gt; &lt;a href="https://www.infoq.com/news/2018/02/axondb-event-store-cqrs"&gt;Spring-based framework supporting CQRS&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Our short-awards nominated podcast, &lt;a href="https://open.spotify.com/show/1MODQCggYv8Yo6IKLL76JC"&gt;&lt;em&gt;The Moment&lt;/em&gt;, is now available on Spotify&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Check out this quick-read slidedeck on &lt;a href="https://speakerdeck.com/bertzzie/spring-cloud-contract-introduction"&gt;the value of Spring Cloud Contract&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;It&amp;rsquo;s a bummer to see &lt;a href="https://twitter.com/springcentral/status/968252418717700096"&gt;Spring legend Vinicius Carvalho&lt;/a&gt; depart for other horizons, but we wish him luck!&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://twitter.com/springcentral/status/968248640618680320"&gt;Zipkin 2.5&lt;/a&gt; - which supports distributed tracing - looks awesome! Zipkin 2.5 formalizes the tag &amp;ldquo;http.route&amp;rdquo;, used for metrics correlation and span naming conventions. It also presents &lt;code&gt;zipkin-gcp&lt;/code&gt; (formerly known as &lt;code&gt;stackdriver-zipkin&lt;/code&gt;) for continued progress towards Google Cloud Platform. Finally, it includes a number of updates you may not have noticed!&lt;/li&gt;
+  &lt;li&gt;The &lt;a href="https://twitter.com/SpringConTech/status/968157465157275648"&gt;SpringCon.Tech conference&lt;/a&gt;, in amazing New Orleans, has extended their CFP. Submit now!&lt;/li&gt;
+  &lt;li&gt;Keyhole Software&amp;rsquo;s Billy Korando has a &lt;a href="https://twitter.com/springcentral/status/968239369118035968"&gt;nice post on what&amp;rsquo;s new in JUnit 5&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;The new Spring Cloud Stream 2.0 release includes a complete revamp of content-type negotiation for the channel-based binders to address performance, flexibility and most importantly consistency. This &lt;a href="https://twitter.com/springcentral/status/968186967790796800"&gt;blog by Oleg Zhurakousky&lt;/a&gt; has the details.&lt;/li&gt;
+  &lt;li&gt;Mark Heckler does a great job &lt;a href="https://twitter.com/springcentral/status/968186042548240384"&gt;introducing Spring Cloud Services for Spring developers&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://www.cloudfoundry.org/event/cfdaykccnceu18/"&gt;#CloudFoundry Day&lt;/a&gt; at #KubeCon + #CloudNativeCon is an educational event designed for the best minds of the cloud-native world. Join us May 1 to learn about the platform, connect with local end users and engineers, and exchange knowledge.&lt;/li&gt;
+  &lt;li&gt;Check out this Baeldung blog on &lt;a href="http://www.baeldung.com/spring-feature-flags"&gt;feature flags with Spring Boot and Spring Cloud&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;This is interesting: &lt;a href="https://twitter.com/sometorin/status/966402867950059520"&gt;Open Policy Agent now has support for the Spring Security &lt;code&gt;AccessDecisionVoter&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Want to use &lt;a href="https://channel9.msdn.com/Shows/On-NET/Dave-Tillman-and-Zach-Brown-Resilient-Microservices-with-Steeltoe"&gt;Spring Cloud services from .NET?&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Some good advice on architecture &lt;a href="https://twitter.com/springcentral/status/967506640009220097"&gt;from Arun Gupta and Matt Stine&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Check out how to use health check &lt;a href="https://www.cloudfoundry.org/blog/swimming-pool-containers-lifeguards-duty-part-ii/"&gt;endpoints with Cloud Foundry&amp;rsquo;s Diego&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;I wrote a little thing about how to &lt;a href="http://www.javamagazine.mozaicreader.com/JanFeb2018/Twitter#&amp;pageSet=61&amp;page=0&amp;contentItem=0"&gt;use project Reactor and Spring to build reactive applications for the Java Magazine&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;This is super exciting: &lt;a href="https://github.com/soudmaijer/spring-cloud-contract/blob/cb087c0f7d3815624dc20a8417e748318c6231a8/spring-cloud-contract-tools/spring-cloud-contract-spec-kotlin/src/test/resources/contracts/shouldMarkClientAsFraud.kts"&gt;a Spring Cloud Contract definition&lt;/a&gt; written in &lt;em&gt;Kotlin&lt;/em&gt;! (Coming soon!)&lt;/li&gt;
+  &lt;li&gt;Not a lot about Spring in this one, but it&amp;rsquo;s a very useful article on various &lt;a href="https://jaxenter.com/command-line-tools-developers-141637.html"&gt;command line tools that are useful for developers&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;the Java Code Geeks blog has a nice post on &lt;a href="https://www.javacodegeeks.com/2018/02/springboot-messaging-rabbitmq.html"&gt;messaging with RabbitMQ and Spring Boot&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;A good introduction to &lt;a href="http://www.baeldung.com/javax-validation-method-constraints"&gt;method constraints with the bean validation 2.0 API&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;The SivaLabs blog has a nice post on why Spring Boot is so popular - worth a read if you&amp;rsquo;re not already &lt;a href="https://sivalabs.in/2018/02/why-springboot-so-popular-how-to-learn-springboot/"&gt;convinced it&amp;rsquo;s worth learning&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://itunes.apple.com/us/podcast/software-engineering-daily/id1019576853?mt=2&amp;i=1000403214905"&gt;Software engineering daily podcast on cloudfoundry&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;I&amp;rsquo;m honored to have been included in this &lt;a href="http://www.onalytica.com/blog/posts/top-influential-developers-in-ai-cloud-iot-cybersecurity-and-vr-ar-mr/"&gt;list of most influential folks in cloud&lt;/a&gt;. Lots of good people in that list, besides yours truly!&lt;/li&gt;
+  &lt;li&gt;Pivotal Cloud Foundry legend Mike Dalessio was a recent guest on the &lt;a href="https://www.softwaredaily.com/post/5a8d7c5f549ae10004734d03/Cloud-Foundry-Overview-with-Mike-Dalessio"&gt;Software Daily podcast&lt;/a&gt;. It&amp;rsquo;s a &lt;em&gt;great&lt;/em&gt; listen!&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://twitter.com/springcloud/status/966351370340257792"&gt;https://twitter.com/springcloud/status/966351370340257792&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Join me in &lt;a href="https://twitter.com/springcentral/status/966333008029532160"&gt;welcoming Josh Cummings to the Spring team&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;The Riff project has just &lt;a href="https://projectriff.io/blog/announcing-riff-0-0-4/"&gt;announced Riff 0.0.4&lt;/a&gt;. Riff is a function-as-a-service offering from Pivotal that runs on top of Kubernetes.&lt;/li&gt;
+  &lt;li&gt;The Asimo Tech blog has a nice post on &lt;a href="http://tech.asimio.net/2018/02/20/Microservices-Sidecar-pattern-implementation-using-Postgres-Spring-Cloud-Netflix-and-Docker.html"&gt;using a microservices Sidecar pattern implementation using Postgres, Spring Cloud Netflix and Docker&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://twitter.com/micrometerio/status/966096809721507840"&gt;Micrometer 1.0 is now GA&lt;/a&gt;!&lt;/li&gt;
+  &lt;li&gt;This post introduces &lt;a href="https://lists.cloudfoundry.org/g/cf-dev/message/7741"&gt;TLS from Gorouter&lt;/a&gt; to app containers in Cloud Foundry&lt;/li&gt;
+&lt;/ul&gt;</content>
+  </entry>
+  <entry>
+    <title>Spring Cloud Finchley.M7 Has Been Released</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/02/27/spring-cloud-finchley-m7-has-been-released" />
+    <category term="releases" label="Releases" />
+    <author>
+      <name>Ryan Baxter</name>
+    </author>
+    <id>tag:spring.io,2018-02-27:3188</id>
+    <updated>2018-02-27T20:14:34Z</updated>
+    <content type="html">&lt;p&gt;On behalf of the community, I am pleased to announce that the Milestone 7 (M7) of the &lt;a href="https://cloud.spring.io"&gt;Spring Cloud Finchley&lt;/a&gt; Release Train is available today. The release can be found in &lt;a href="https://repo.spring.io/milestone/"&gt;Spring Milestone&lt;/a&gt; repository. This release is compatible with Spring Boot 2.0.0.RC2. You can check out the Finchley &lt;a href="https://github.com/spring-projects/spring-cloud/wiki/Spring-Cloud-Finchley-Release-Notes"&gt;release notes for more information&lt;/a&gt;.&lt;/p&gt;&lt;h2&gt;&lt;a href="#notable-changes-in-the-finchley-release-train" class="anchor" name="notable-changes-in-the-finchley-release-train"&gt;&lt;/a&gt;Notable Changes in the Finchley Release Train&lt;/h2&gt;&lt;h3&gt;&lt;a href="#spring-cloud-netflix" class="anchor" name="spring-cloud-netflix"&gt;&lt;/a&gt;Spring Cloud Netflix&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;All of the code releated to Feign has been moved to a separate project, &lt;a href="https://github.com/spring-cloud/spring-cloud-openfeign"&gt;Spring Cloud OpenFeign&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;There is a known issue with the Hystrix Webflux endpoint when using Spring Boot 2.0.0.RC2. You can follow this &lt;a href="https://github.com/reactor/reactor-core/issues/1091"&gt;issue&lt;/a&gt; in Reactor for more information.&lt;/li&gt;
+&lt;/ul&gt;&lt;h3&gt;&lt;a href="#spring-cloud-openfeign" class="anchor" name="spring-cloud-openfeign"&gt;&lt;/a&gt;Spring Cloud Openfeign&lt;/h3&gt;
+&lt;p&gt;New &lt;a href="https://github.com/spring-cloud/spring-cloud-openfeign"&gt;project&lt;/a&gt; containing all the Feign code that used to be in Spring Cloud Netflix.&lt;/p&gt;&lt;h3&gt;&lt;a href="#spring-cloud-gateway" class="anchor" name="spring-cloud-gateway"&gt;&lt;/a&gt;Spring Cloud Gateway&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href="https://github.com/spring-cloud/spring-cloud-gateway/issues/94"&gt;Support for retrying requests&lt;/a&gt; using &lt;code&gt;RetryGatewayFilterFactory&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Bug fixes for &lt;a href="https://github.com/spring-cloud/spring-cloud-gateway/issues/200"&gt;STOMP&lt;/a&gt; and &lt;a href="https://github.com/spring-cloud/spring-cloud-gateway/issues/161"&gt;Server Sent Events&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The following modules were updated as part of Finchley.M7:&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Module &lt;/th&gt;
+      &lt;th&gt;Version &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Gateway &lt;/td&gt;
+      &lt;td&gt;2.0.0.M7 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Sleuth &lt;/td&gt;
+      &lt;td&gt;2.0.0.M7 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Zookeeper &lt;/td&gt;
+      &lt;td&gt;2.0.0.M6 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Build &lt;/td&gt;
+      &lt;td&gt;2.0.0.RC1 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Consul &lt;/td&gt;
+      &lt;td&gt;2.0.0.M6 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Netflix &lt;/td&gt;
+      &lt;td&gt;2.0.0.M7 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Aws &lt;/td&gt;
+      &lt;td&gt;2.0.0.M4 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Contract &lt;/td&gt;
+      &lt;td&gt;2.0.0.M7 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Cloudfoundry &lt;/td&gt;
+      &lt;td&gt;2.0.0.M3 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Security &lt;/td&gt;
+      &lt;td&gt;2.0.0.M2 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Dependencies &lt;/td&gt;
+      &lt;td&gt;2.0.0.RC1 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Commons &lt;/td&gt;
+      &lt;td&gt;2.0.0.M7 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Config &lt;/td&gt;
+      &lt;td&gt;2.0.0.M7 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Task &lt;/td&gt;
+      &lt;td&gt;2.0.0.M3 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Bus &lt;/td&gt;
+      &lt;td&gt;2.0.0.M6 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Openfeign &lt;/td&gt;
+      &lt;td&gt;2.0.0.M1 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Stream &lt;/td&gt;
+      &lt;td&gt;Elmhurst.RC1 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Boot &lt;/td&gt;
+      &lt;td&gt;2.0.0.RC2 &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Spring Cloud Vault &lt;/td&gt;
+      &lt;td&gt;2.0.0.M6 &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;As always, we welcome feedback on &lt;a href="https://github.com/spring-cloud/"&gt;GitHub&lt;/a&gt;, on &lt;a href="https://gitter.im/spring-cloud/spring-cloud"&gt;Gitter&lt;/a&gt;, on &lt;a href="http://stackoverflow.com/questions/tagged/spring-cloud"&gt;Stack Overflow&lt;/a&gt;, or on &lt;a href="https://twitter.com/SpringCloud"&gt;Twitter&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To get started with Maven with a BOM (dependency management only):&lt;/p&gt;
+&lt;pre&gt;&lt;code class="prettyprint"&gt;&amp;lt;repositories&amp;gt;&#xD;
+    &amp;lt;repository&amp;gt;&#xD;
+        &amp;lt;id&amp;gt;spring-milestones&amp;lt;/id&amp;gt;&#xD;
+        &amp;lt;name&amp;gt;Spring Milestones&amp;lt;/name&amp;gt;&#xD;
+        &amp;lt;url&amp;gt;http://repo.spring.io/milestone&amp;lt;/url&amp;gt;&#xD;
+        &amp;lt;snapshots&amp;gt;&#xD;
+            &amp;lt;enabled&amp;gt;false&amp;lt;/enabled&amp;gt;&#xD;
+        &amp;lt;/snapshots&amp;gt;&#xD;
+    &amp;lt;/repository&amp;gt;&#xD;
+&amp;lt;/repositories&amp;gt;&#xD;
+&amp;lt;dependencyManagement&amp;gt;&#xD;
+    &amp;lt;dependencies&amp;gt;&#xD;
+        &amp;lt;dependency&amp;gt;&#xD;
+            &amp;lt;groupId&amp;gt;org.springframework.cloud&amp;lt;/groupId&amp;gt;&#xD;
+            &amp;lt;artifactId&amp;gt;spring-cloud-dependencies&amp;lt;/artifactId&amp;gt;&#xD;
+            &amp;lt;version&amp;gt;Finchley.M7&amp;lt;/version&amp;gt;&#xD;
+            &amp;lt;type&amp;gt;pom&amp;lt;/type&amp;gt;&#xD;
+            &amp;lt;scope&amp;gt;import&amp;lt;/scope&amp;gt;&#xD;
+        &amp;lt;/dependency&amp;gt;&#xD;
+    &amp;lt;/dependencies&amp;gt;&#xD;
+&amp;lt;/dependencyManagement&amp;gt;&#xD;
+&amp;lt;dependencies&amp;gt;&#xD;
+    &amp;lt;dependency&amp;gt;&#xD;
+        &amp;lt;groupId&amp;gt;org.springframework.cloud&amp;lt;/groupId&amp;gt;&#xD;
+        &amp;lt;artifactId&amp;gt;spring-cloud-starter-config&amp;lt;/artifactId&amp;gt;&#xD;
+    &amp;lt;/dependency&amp;gt;&#xD;
+    &amp;lt;dependency&amp;gt;&#xD;
+        &amp;lt;groupId&amp;gt;org.springframework.cloud&amp;lt;/groupId&amp;gt;&#xD;
+        &amp;lt;artifactId&amp;gt;spring-cloud-starter-netflix-eureka-client&amp;lt;/artifactId&amp;gt;&#xD;
+    &amp;lt;/dependency&amp;gt;&#xD;
+    ...&#xD;
+&amp;lt;/dependencies&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;or with Gradle:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="prettyprint"&gt;buildscript {&#xD;
+    dependencies {&#xD;
+        classpath &amp;quot;io.spring.gradle:dependency-management-plugin:1.0.2.RELEASE&amp;quot;&#xD;
+    }&#xD;
+}&#xD;
+&#xD;
+repositories {&#xD;
+    maven {&#xD;
+        url &amp;#39;http://repo.spring.io/milestone&amp;#39;&#xD;
+    }&#xD;
+}&#xD;
+&#xD;
+apply plugin: &amp;quot;io.spring.dependency-management&amp;quot;&#xD;
+&#xD;
+dependencyManagement {&#xD;
+    imports {&#xD;
+        mavenBom &amp;#39;org.springframework.cloud:spring-cloud-dependencies:Finchley.M7&amp;#39;&#xD;
+    }&#xD;
+}&#xD;
+&#xD;
+dependencies {&#xD;
+    compile &amp;#39;org.springframework.cloud:spring-cloud-starter-config&amp;#39;&#xD;
+    compile &amp;#39;org.springframework.cloud:spring-cloud-starter-netflix-eureka-client&amp;#39;&#xD;
+    ...&#xD;
+}
+&lt;/code&gt;&lt;/pre&gt;</content>
+  </entry>
+  <entry>
+    <title>Spring Cloud Stream 2.0 - Polled Consumers</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/02/27/spring-cloud-stream-2-0-polled-consumers" />
+    <category term="engineering" label="Engineering" />
+    <author>
+      <name>Gary Russell</name>
+    </author>
+    <id>tag:spring.io,2018-02-26:3185</id>
+    <updated>2018-02-27T17:31:03Z</updated>
+    <content type="html">&lt;blockquote&gt;
+  &lt;p&gt;&lt;em&gt;This is the second blog in a series of pre-release blogs in preparation for Spring Cloud Stream 2.0.0.RELEASE.&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;&lt;h3&gt;&lt;a href="#preface" class="anchor" name="preface"&gt;&lt;/a&gt;Preface&lt;/h3&gt;
+&lt;p&gt;Spring Cloud Stream 2.0 introduces polled consumers, where the application can control message processing rates.&lt;/p&gt;&lt;h4&gt;&lt;a href="#introduction" class="anchor" name="introduction"&gt;&lt;/a&gt;Introduction&lt;/h4&gt;
+&lt;p&gt;Spring Cloud Stream has the concepts of producers and consumers; when using the messaging paradigm, &lt;code&gt;MessageChannel&lt;/code&gt;s are bound to destinations (e.g. Kafka topics, Rabbit Exchanges/Queues). To-date, on the consumer side, messages are delivered whenever an idle consumer is available. In effect, the broker controls the rate of delivery; usually, the next message is delivered immediately after the current one is processed. &lt;/p&gt;
+&lt;p&gt;2.0 introduces polled consumers, where the application can control the rate of message consumption.&lt;br/&gt;Polled consumers are supported by the Kafka and RabbitMQ binders.&lt;/p&gt;&lt;h4&gt;&lt;a href="#details" class="anchor" name="details"&gt;&lt;/a&gt;Details&lt;/h4&gt;
+&lt;p&gt;With polled consumers, instead of binding a &lt;code&gt;MessageChannel&lt;/code&gt; to the destination, we bind a &lt;code&gt;PollableMessageSource&lt;/code&gt;; for example, a &lt;code&gt;PolledProcessor&lt;/code&gt; binding might be configured like so:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="prettyprint java"&gt;public interface PolledProcessor {&#xD;
+&#xD;
+    @Input&#xD;
+    PollableMessageSource destIn();&#xD;
+&#xD;
+    @Output&#xD;
+    MessageChannel destOut();&#xD;
+&#xD;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The message source has a method:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="prettyprint java"&gt;boolean poll(MessageHandler handler);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The message is not acknowledged until the handler&amp;rsquo;s &lt;code&gt;handleRequest&lt;/code&gt; method exits.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;MessageHandler&lt;/code&gt; is the interface from spring-messaging; you can provide one of the standard Spring Integration message handlers, or your own implementation (often a lambda). Because the &lt;code&gt;handleMessage&lt;/code&gt; method takes a &lt;code&gt;Message&amp;lt;?&amp;gt;&lt;/code&gt; argument, there is no type information and the payload will not be converted.&lt;/p&gt;
+&lt;p&gt;However, message conversion &lt;a href="https://spring.io/blog/2018/02/26/spring-cloud-stream-2-0-content-type-negotiation-and-transformation"&gt;as discussed in the first blog in this series&lt;/a&gt; can be applied to polled consumers as well. In order to communicate the type information to the conversion service, we provide a parameterized type reference in the overloaded &lt;code&gt;poll()&lt;/code&gt; method:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="prettyprint java"&gt;boolean poll(MessageHandler handler, ParameterizedTypeReference&amp;lt;?&amp;gt; type)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And the message payload will be converted to the type, which can be simple, for example with a content type of &lt;code&gt;text/plain&lt;/code&gt;:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;new ParameterizedTypeReference&amp;lt;String&amp;gt;() {}&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;or more complex with, for example a JSON content type:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;new ParameterizedTypeReference&amp;lt;Map&amp;lt;String, Foo&amp;gt;&amp;gt;() {}&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;h4&gt;&lt;a href="#putting-it-all-together" class="anchor" name="putting-it-all-together"&gt;&lt;/a&gt;Putting it all Together&lt;/h4&gt;
+&lt;p&gt;The following simple Spring Boot application provides a complete example; it receives String payloads, converts them to upper case and forwards the result to another destination.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="prettyprint java"&gt;@SpringBootApplication&#xD;
+@EnableBinding(Blog2Application.PolledProcessor.class)&#xD;
+public class Blog2Application {&#xD;
+&#xD;
+  private final Logger logger =&#xD;
+  	  LoggerFactory.getLogger(Blog2Application.class);&#xD;
+&#xD;
+  public static void main(String[] args) {&#xD;
+    SpringApplication.run(Blog2Application.class, args);&#xD;
+  }&#xD;
+&#xD;
+  @Bean&#xD;
+  public ApplicationRunner runner(PollableMessageSource source,&#xD;
+  	    MessageChannel dest) {&#xD;
+    return args -&amp;gt; {&#xD;
+      while (true) {&#xD;
+        boolean result = source.poll(m -&amp;gt; {&#xD;
+          String payload = (String) m.getPayload();&#xD;
+          logger.info(&amp;quot;Received: &amp;quot; + payload);&#xD;
+          dest.send(MessageBuilder.withPayload(payload.toUpperCase())&#xD;
+              .copyHeaders(m.getHeaders())&#xD;
+              .build());&#xD;
+        }, new ParameterizedTypeReference&amp;lt;String&amp;gt;() { });&#xD;
+        if (result) {&#xD;
+          logger.info(&amp;quot;Processed a message&amp;quot;);&#xD;
+        }&#xD;
+        else {&#xD;
+          logger.info(&amp;quot;Nothing to do&amp;quot;);&#xD;
+        }&#xD;
+        Thread.sleep(5_000);&#xD;
+      }&#xD;
+    };&#xD;
+  }&#xD;
+&#xD;
+  public static interface PolledProcessor {&#xD;
+&#xD;
+    @Input&#xD;
+    PollableMessageSource source();&#xD;
+&#xD;
+    @Output&#xD;
+    MessageChannel dest();&#xD;
+&#xD;
+  }&#xD;
+&#xD;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3&gt;&lt;a href="#conclusion" class="anchor" name="conclusion"&gt;&lt;/a&gt;Conclusion&lt;/h3&gt;
+&lt;p&gt;Applications can now control the rate at which messages are consumed.&lt;/p&gt;
+&lt;p&gt;For more information, see &lt;a href="https://docs.spring.io/spring-cloud-stream/docs/Elmhurst.BUILD-SNAPSHOT/reference/htmlsingle/index.html#_using_polled_consumers"&gt;Using Polled Consumers&lt;/a&gt; in the reference manual.&lt;/p&gt;
+&lt;p&gt;We encourage you to provide feedback using one of the following facilities:&lt;br/&gt;- &lt;a href="https://github.com/spring-cloud/spring-cloud-stream/issues"&gt;Project&amp;rsquo;s GitHub Issues &lt;/a&gt;&lt;br/&gt;- &lt;a href="https://stackoverflow.com/tags/spring-cloud-stream"&gt;Stack Overflow channel&lt;/a&gt;&lt;br/&gt;- &lt;a href="https://gitter.im/spring-cloud/spring-cloud-stream"&gt;Gitter channel&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Enjoy!&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>Spring Security OAuth 2.3.0.RC1 Released</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/02/27/spring-security-oauth-2-3-0-rc1-released" />
+    <category term="releases" label="Releases" />
+    <author>
+      <name>Joe Grandja</name>
+    </author>
+    <id>tag:spring.io,2018-02-27:3186</id>
+    <updated>2018-02-27T16:03:08Z</updated>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;On behalf of the community, I&amp;#8217;m pleased to announce the release of Spring Security OAuth 2.3.0.RC1.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;a href="https://github.com/spring-projects/spring-security-oauth/milestone/30?closed=1"&gt;2.3.0.RC1 release&lt;/a&gt; adds new support for Elliptic Curve signature verification in &lt;code&gt;JwkTokenStore&lt;/code&gt;. This release also includes a few minor enhancements and bug fixes.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;&lt;a href="http://projects.spring.io/spring-security-oauth/"&gt;Project Page&lt;/a&gt; |
+&lt;a href="https://github.com/spring-projects/spring-security-oauth/"&gt;GitHub&lt;/a&gt; |
+&lt;a href="http://projects.spring.io/spring-security-oauth/docs/Home.html"&gt;Documentation&lt;/a&gt; | &lt;a href="http://stackoverflow.com/questions/tagged/spring-security-oauth2"&gt;Help&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <title>Spring Cloud Data Flow 1.4.0 M1 released</title>
+    <link rel="alternate" href="https://spring.io/blog/2018/02/27/spring-cloud-data-flow-1-4-0-m1-released" />
+    <category term="releases" label="Releases" />
+    <author>
+      <name>Gunnar Hillert</name>
+    </author>
+    <id>tag:spring.io,2018-02-23:3181</id>
+    <updated>2018-02-27T09:00:00Z</updated>
+    <content type="html">&lt;div class="paragraph"&gt;
+&lt;p&gt;The &lt;a href="https://cloud.spring.io/spring-cloud-dataflow/"&gt;Spring Cloud Data Flow&lt;/a&gt; team is excited to announce the release of &lt;code&gt;1.4.0 M1&lt;/code&gt;. Follow the &lt;em&gt;Getting Started&lt;/em&gt; guides for &lt;a href="https://docs.spring.io/spring-cloud-dataflow/docs/1.4.0.M1/reference/htmlsingle/#getting-started"&gt;Local Server&lt;/a&gt;, &lt;a href="https://docs.spring.io/spring-cloud-dataflow-server-cloudfoundry/docs/1.4.0.M1/reference/htmlsingle/#getting-started"&gt;Cloud Foundry&lt;/a&gt;, and &lt;a href="https://docs.spring.io/spring-cloud-dataflow-server-kubernetes/docs/1.4.0.M1/reference/htmlsingle/#kubernetes-getting-started"&gt;Kubernetes&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;A big focus of this first milestone release of the &lt;code&gt;1.4.x&lt;/code&gt; line has been the &lt;a href="https://github.com/spring-cloud/spring-cloud-dataflow-ui"&gt;Dashboard UI&lt;/a&gt;. In an effort to keep our UI dependencies current at all times, we finally upgraded the UI to &lt;a href="https://angular.io/"&gt;Angular&lt;/a&gt; &lt;code&gt;5.2&lt;/code&gt; and &lt;a href="https://github.com/angular/angular-cli"&gt;Angular CLI&lt;/a&gt; &lt;code&gt;1.6&lt;/code&gt;. Furthermore, the UI now provides better integration with &lt;a href="https://cloud.spring.io/spring-cloud-skipper/"&gt;Spring Cloud Skipper&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;As such, you can now manage the versions of App Registrations and set a default version.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="imageblock"&gt;
+&lt;div class="content"&gt;
+&lt;img src="https://raw.githubusercontent.com/spring-cloud/spring-cloud-dataflow/gh-pages/img/ui-manage-versions-1-4-0-M1.png" alt="Manage Versions"&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;The version information is now shown on the App Registration list page as well. Besides providing better visual hues regarding the &lt;em&gt;Application Types&lt;/em&gt; (Source, Sink, Task, Processor), you can now also search for App Registrations by &lt;em&gt;Application Type&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="imageblock"&gt;
+&lt;div class="content"&gt;
+&lt;img src="https://raw.githubusercontent.com/spring-cloud/spring-cloud-dataflow/gh-pages/img/ui-applications-list-1-4-0-M1v2.png" alt="Manage Versions"&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Additionally, when browsing the App Registration details, you can easily select the version for which you would like to see the details.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="imageblock"&gt;
+&lt;div class="content"&gt;
+&lt;img src="https://raw.githubusercontent.com/spring-cloud/spring-cloud-dataflow/gh-pages/img/ui-application-details-1-4-0-M1.png" alt="Application Details"&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;When deploying streams, you now have the ability to deploy them to multiple platforms.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="imageblock"&gt;
+&lt;div class="content"&gt;
+&lt;img src="https://raw.githubusercontent.com/spring-cloud/spring-cloud-dataflow/gh-pages/img/ui-deploy-stream-1-4-0-M1v2.png" alt="Deploy Streams to Platform"&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Lastly, in this release we also polished the &lt;a href="https://docs.spring.io/spring-cloud-dataflow/docs/1.4.0.M1/reference/htmlsingle/"&gt;Reference Documentation&lt;/a&gt; and documented among other things the UI support for &lt;a href="https://docs.spring.io/spring-cloud-dataflow/docs/1.4.0.M1/reference/htmlsingle/#spring-cloud-dataflow-stream-dsl-named-destinations"&gt;named destinations&lt;/a&gt;  to facilitate &lt;a href="https://docs.spring.io/spring-cloud-dataflow/docs/1.4.0.M1/reference/htmlsingle/#_creating_fan_in_fan_out_streams"&gt;fan-in/fan-out&lt;/a&gt; scenarios.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;As always, we welcome feedback and contributions, so please reach out to us on &lt;a href="https://stackoverflow.com/questions/tagged/spring-cloud-dataflow"&gt;Stackoverflow&lt;/a&gt; or &lt;a href="https://github.com/spring-cloud/spring-cloud-dataflow/issues"&gt;GitHub&lt;/a&gt; or via &lt;a href="https://gitter.im/spring-cloud/spring-cloud-dataflow"&gt;Gitter&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="paragraph"&gt;
+&lt;p&gt;Please try it out, share your feedback, and consider contributing to the project!&lt;/p&gt;
+&lt;/div&gt;</content>
+  </entry>
+</feed>

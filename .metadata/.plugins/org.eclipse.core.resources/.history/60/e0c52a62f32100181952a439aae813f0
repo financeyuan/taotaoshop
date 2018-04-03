@@ -1,0 +1,5 @@
+package com.yaoyao.order.pojo;
+
+public class OrderInfo {
+
+}

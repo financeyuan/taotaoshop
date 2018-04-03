@@ -1,0 +1,5 @@
+package com.shop.item.pojo;
+
+public class Item {
+
+}

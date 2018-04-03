@@ -1,0 +1,5 @@
+package com.shop.sso.controller;
+
+public class PageController {
+
+}

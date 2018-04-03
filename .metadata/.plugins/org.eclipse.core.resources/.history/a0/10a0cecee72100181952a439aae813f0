@@ -1,0 +1,7 @@
+package com.yaoyao.sso.service;
+
+import com.yaoyao.common.pojo.ShopResult;
+
+public interface UserService {
+	ShopResult checkUserData(String data,int type);
+}

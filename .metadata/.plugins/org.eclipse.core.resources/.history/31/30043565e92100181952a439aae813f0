@@ -1,0 +1,5 @@
+package com.yaoyao.common.utils;
+
+public class CookieUtils {
+
+}

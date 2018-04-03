@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="shop-manager-web">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="shop-common-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/shop-common/shop-common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="shop-manager-interface-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/shop-manager-interface/shop-manager-interface">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="shop-manager-pojo-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/shop-manager-pojo/shop-manager-pojo">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="shop-content-interface-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/shop-content-interface/shop-content-interface">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="shop-search-interface-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/shop-search-interface/shop-search-interface">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="shop-manager-web"/>
+        <property name="java-output-path" value="/shop-manager-web/target/classes"/>
+    </wb-module>
+</project-modules>

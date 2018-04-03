@@ -1,0 +1,8 @@
+package com.yaoyao.search.service;
+
+public class SearchItemService {
+	
+	//将数据导入索引库
+	
+
+}

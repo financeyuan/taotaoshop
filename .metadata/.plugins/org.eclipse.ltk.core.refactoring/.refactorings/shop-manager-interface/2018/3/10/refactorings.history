@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy package &apos;com.yaoyao.service&apos; to &apos;shop-sso-interface/src/main/java&apos;&#x0D;&#x0A;- Original project: &apos;shop-manager-interface&apos;&#x0D;&#x0A;- Destination element: &apos;shop-sso-interface/src/main/java&apos;&#x0D;&#x0A;- Original element: &apos;shop-manager-interface/src/main/java/com.yaoyao.service&apos;" description="Copy package" destination="=shop-sso-interface/src\/main\/java" element1="/src\/main\/java&lt;com.yaoyao.service" flags="589830" fragments="1" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyPackages" stamp="1520412927115" version="1.0"/>
+</session>

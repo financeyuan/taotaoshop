@@ -1,0 +1,5 @@
+#配置每页显示多少条
+SEARCH_RESULT_ROWS=20
+#静态页面输出路径
+HTML_OUT_PATH=G:/workspace/shop/shop-item-web/src/main/webapp/WEB-INF/ftl
+G:\\\\\\shop-item-web\\\\\\\\WEB-INF\\

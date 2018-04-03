@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPTemplatePreferencePage$JSPEditTemplateDialog_dialogBounds">
+		<item value="1382" key="DIALOG_WIDTH"/>
+		<item value="1|Microsoft YaHei UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Microsoft YaHei UI" key="DIALOG_FONT_NAME"/>
+		<item value="744" key="DIALOG_HEIGHT"/>
+		<item value="0" key="DIALOG_X_ORIGIN"/>
+		<item value="0" key="DIALOG_Y_ORIGIN"/>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item value="false" key="isRegEx"/>
+		<item value="Example_Where_Clause" key="selection"/>
+		<item value="false" key="casesensitive"/>
+		<item value="false" key="incremental"/>
+		<item value="true" key="wrap"/>
+		<item value="false" key="wholeword"/>
+		<list key="findhistory">
+			<item value="Example_Where_Clause"/>
+			<item value="refid=&quot;Example_Where_Clause&quot;"/>
+			<item value="selectByExample"/>
+			<item value="taotao"/>
+			<item value="TaotaoResult"/>
+			<item value="ShopResult"/>
+			<item value="fastjson"/>
+			<item value="picFileUpload"/>
+			<item value="\\\\"/>
+			<item value="pagination"/>
+			<item value="collapsible"/>
+			<item value="jackson-databind"/>
+			<item value="slf4j-log4j12"/>
+			<item value="zkclient"/>
+			<item value="zookeeper"/>
+		</list>
+		<list key="replacehistory">
+			<item value="shop"/>
+			<item value="ShopResult"/>
+			<item value="\\"/>
+			<item value="yaoyao"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item value="300" key="DIALOG_WIDTH"/>
+		<item value="1|Microsoft YaHei UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Microsoft YaHei UI" key="DIALOG_FONT_NAME"/>
+		<item value="410" key="DIALOG_HEIGHT"/>
+		<item value="862" key="DIALOG_X_ORIGIN"/>
+		<item value="128" key="DIALOG_Y_ORIGIN"/>
+	</section>
+</section>
